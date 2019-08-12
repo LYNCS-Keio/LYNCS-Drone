@@ -25,7 +25,7 @@ namespace dps
 	int c0_; //temperature coefficient value
 	int c1_; //temperature coefficient value
 	public:
-		DPS310(dps_bus_t *bus);
+		DPS310(dps_bus_t *bus, int cs_pin_num);
 		~DPS310(){};
 		void setTmpExt(bool flag){tmp_ext_flag_ = flag;}
 		/*temperature measurement rate

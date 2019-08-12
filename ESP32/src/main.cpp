@@ -40,13 +40,13 @@ extern "C" void app_main()
     config.intr_flags = 0;
     spi_bus_initialize(HSPI_HOST, &config, 0); // 0 DMA not used
     
-    dps::DPS310 myDPS(&mySPI);
+    dps::DPS310 myDPS(&mySPI, CS_PIN);
     myDPS.dev_init(SPI_MODE,SPI_CLOCK,CS_PIN);
     myDPS.setTmpExt(false);
-    myDPS.setTmpRate(0x02);
+    myDPS.setTmpRate(0x00);
     myDPS.setMeasCtrl(0x00);
     myDPS.setTmpOversamplingRate(1);
-    myDPS.setMeasCtrl(0x07);
+
     myDPS.initiarize();
     while (1)
     {

@@ -15,12 +15,13 @@ static inline int convert_complement(uint_type num){
 namespace dps
 {
 
-    DPS310::DPS310(dps_bus_t *bus) : DPS(bus),
+    DPS310::DPS310(dps_bus_t *bus, int cs_pin_num) : DPS(bus),
                                      tmp_ext_flag_(true),
                                      tmp_over_sampling_rate_(1),
                                      tmp_rate_(0),
                                      measure_tontrol_(0x07)
     {
+        
     }
 
     esp_err_t DPS310::initiarize(){
@@ -79,12 +80,6 @@ namespace dps
             break;
         }
 
-        //acqire raw coefficient value
-        if(DPS_ERR_CHECK(readBytes(REG_COEF,11,buffer_)))return err_;
-        uint16_t calib0 = ((buffer_[0] << 4) & 0xFF0) | ((buffer_[1] >> 4) & 0x00F);
-        uint16_t calib1 = ((buffer_[1] << 8) & 0xF00) | buffer_[2];
-        c0_ = convert_complement<uint16_t,12>(calib0);
-        c1_ = convert_complement<uint16_t,12>(calib1);
 
         //set configuration
 		if(DPS_ERR_CHECK(writeByte(REG_TMP_CFG,TMP_CFG)))return err_;//TMP_CFG : temparature measurement configuration
@@ -99,6 +94,13 @@ namespace dps
         //prepare
         if(DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,0x02)))return err_;
 
+        //acqire raw coefficient value
+        if(DPS_ERR_CHECK(readBytes(REG_COEF,11,buffer_)))return err_;
+        uint32_t calib0 = (((uint32_t)(buffer_[0]) << 4)) | (((uint32_t)(buffer_[1]) >> 4) & 0x0F);
+        c0_ = convert_complement<uint32_t,12>(calib0);
+        uint32_t calib1 = (((uint32_t)buffer_[1] & 0x0F) << 8) | buffer_[2];
+        c1_ = convert_complement<uint32_t,12>(calib1);
+
         //acqire raw temperature value
         if(DPS_ERR_CHECK(readBytes(REG_TMP_B2,3,buffer_)))return err_;
         uint32_t temp = ((buffer_[0] << 16) & 0xFF0000) | ((buffer_[1] << 8) & 0x00FF00) | (buffer_[2]);
@@ -109,7 +111,7 @@ namespace dps
         printf("calib0=%d\n",c0_);
         printf("calib1=%d\n",c1_);
         printf("T=%f\n",T_raw_sc);
-        T_comp = float(c0_)*0.5 + T_raw_sc*float(c1_);
+        T_comp = (float(c0_)*0.5) + T_raw_sc*float(c1_);
         
         return err_;
     }
