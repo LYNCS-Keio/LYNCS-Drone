@@ -8,5 +8,5 @@ namespace dps
         DPS__FAIL_INIT_FAILED = -2,
         DPS__FAIL_TOOBUSY = -3,
         DPS__FAIL_UNFINISHED = -4
-    }
+    };
 } // namespace dps
