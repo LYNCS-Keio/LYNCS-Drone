@@ -23,7 +23,10 @@ namespace dps
     {
         
     }
-
+    esp_err_t DPS310::flushFIFO(){
+        writeBit(REG_CFG_REG,1,1U);
+        return err_;
+    }
     esp_err_t DPS310::initiarize(){
         uint8_t TMP_CFG = 0x00;
         uint8_t MEAS_CTRL = 0xC0;

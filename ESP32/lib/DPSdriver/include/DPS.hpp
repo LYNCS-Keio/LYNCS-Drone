@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SPIbus.hpp"
+#include "../util/dps_const.hpp"
 
 #define DPS_ERR_CHECK(x) (x)
 namespace dps
@@ -17,6 +18,7 @@ namespace dps
     protected:
         uint8_t buffer_[16];     /*!< Commom buffer for temporary data */
         esp_err_t err_;
+        virtual esp_err_t flushFIFO() = 0;
         DPS(){}
     public:
         DPS(dps_bus_t *bus) : bus_{bus}, buffer_{0}, err_{ESP_OK}

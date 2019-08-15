@@ -7,6 +7,7 @@ namespace dps
 	class DPS310 : public DPS
 	{
 	private:
+	esp_err_t flushFIFO();
 	bool tmp_ext_flag_;// used for TMP_EXT configuration. 0 - Internal sensor (in ASIC), 1 - External sensor (in pressure sensor MEMS element).
 	unsigned int tmp_over_sampling_rate_;
 	int tmp_scale_factor_;
