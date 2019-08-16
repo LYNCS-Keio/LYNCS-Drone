@@ -16,11 +16,13 @@ namespace dps
     private:
         dps_bus_t* bus_;         /*!< Communication bus pointer, I2C / SPI */
         dps_addr_handle_t addr_;
+        Mode m_opMode;
     protected:
         uint8_t buffer_[16];     /*!< Commom buffer for temporary data */
         esp_err_t err_;
         virtual esp_err_t flushFIFO() = 0;
         virtual esp_err_t readcoeffs() = 0;
+        dps_err_t setOpMode(Mode opMode);
         	//flags
 	    uint8_t m_initFail;
 
