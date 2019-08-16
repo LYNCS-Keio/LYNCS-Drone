@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SPIbus.hpp"
+#include "../util/dps_register.hpp"
 #include "../util/dps_const.hpp"
 
 #define DPS_ERR_CHECK(x) (x)
@@ -36,7 +37,8 @@ namespace dps
             esp_err_t writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
             esp_err_t writeByte(uint8_t regAddr, uint8_t data);
             esp_err_t writeBytes(uint8_t regAddr, size_t length, const uint8_t* data);
-            esp_err_t registerDump(uint8_t start = 0x0, uint8_t end = 0x7F);
+            esp_err_t writeByteBitfield(uint8_t regAddr, uint8_t mask, uint8_t shift, uint8_t data);
+            esp_err_t writeByteBitfield(uint8_t regAddr, RegMask_t regMask, uint8_t data);
         //! \}
     };
     
@@ -81,6 +83,16 @@ namespace dps
     inline esp_err_t DPS::writeBytes(uint8_t regAddr, size_t length, const uint8_t* data)
     {
         return err_ = bus_->writeBytes(addr_, regAddr, length, data);
+    }
+    /*! Write a value to register using masks*/
+    inline esp_err_t DPS::writeByteBitfield(uint8_t regAddr, uint8_t mask, uint8_t shift, uint8_t data)
+    {
+        uint8_t old_data;
+        readByte(regAddr,&old_data);
+        return err_ = writeByte(regAddr, ((uint8_t)old_data & ~mask) | ((data << shift) & mask));
+    }
+    inline esp_err_t DPS::writeByteBitfield(uint8_t regAddr, RegMask_t regMask, uint8_t data){
+        return writeByteBitfield(regMask.regAddress, regMask.mask, regMask.shift, data);
     }
 
 } // namespace dps
