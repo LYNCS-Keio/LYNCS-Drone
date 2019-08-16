@@ -27,10 +27,14 @@
 #define DPS__OVERSAMPLING_RATE_32 DPS__MEASUREMENT_RATE_32
 #define DPS__OVERSAMPLING_RATE_64 DPS__MEASUREMENT_RATE_64
 #define DPS__OVERSAMPLING_RATE_128 DPS__MEASUREMENT_RATE_128
+//we use 0.1 ms units for time calculations, so 10 units are one millisecond
+#define DPS__BUSYTIME_SCALING 10U
+
+#define DPS__NUM_OF_SCAL_FACTS 8
 
 namespace dps
 {
-
+// status code
 enum dps_err_t
 {
     DPS__SUCCEEDED = 0,
@@ -52,6 +56,16 @@ enum Mode
     CONT_BOTH = 0x07
 };
 
+enum RegisterBlocks_e
+{
+    PRS = 0, // pressure value
+    TEMP,    // temperature value
+};
+
+const RegBlock_t registerBlocks[2] = {
+    {0x00, 3},
+    {0x03, 3},
+};
 /**
  * @brief registers for configuration and flags; these are the same for both 310 and 422, might need to be adapted for future sensors
  * 

@@ -1,6 +1,7 @@
 #pragma once
 #include "dps_register.hpp"
 #define DPS310_NUM_OF_REGMASKS 16
+#define DPS310__SPI_RW_MASK 0x80U
 
 namespace dps310
 {

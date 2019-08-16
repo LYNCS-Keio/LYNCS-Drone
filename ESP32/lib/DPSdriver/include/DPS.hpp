@@ -18,7 +18,8 @@ namespace dps
         dps_addr_handle_t addr_;
         Mode m_opMode;
     protected:
-        uint8_t buffer_[16];     /*!< Commom buffer for temporary data */
+        static const int32_t scaling_facts[DPS__NUM_OF_SCAL_FACTS];
+        uint8_t buffer_[18];     /*!< Commom buffer for temporary data */
         esp_err_t err_;
         virtual esp_err_t flushFIFO() = 0;
         virtual esp_err_t readcoeffs() = 0;
@@ -33,6 +34,11 @@ namespace dps
         dps_err_t configPressure(uint8_t prs_mr, uint8_t prs_osr);
         dps_err_t startMeasureTempOnce(uint8_t oversamplingRate);
         dps_err_t startMeasureTempOnce();
+        dps_err_t getRawResult(int32_t *raw, RegBlock_t reg);
+        dps_err_t getSingleResult(float &result);
+        dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
+        virtual float calcTemp(int32_t raw) = 0;
+        virtual float calcPressure(int32_t raw) = 0;
         	//flags
 	    uint8_t m_initFail;
 
@@ -53,6 +59,7 @@ namespace dps
             esp_err_t readByte(uint8_t regAddr, uint8_t* data);
             esp_err_t readBytes(uint8_t regAddr, size_t length, uint8_t* data);
             esp_err_t readByteBitfield(RegMask_t regMask, uint8_t* data);
+            esp_err_t readBlock(RegBlock_t regBlock, uint8_t* data);
             esp_err_t writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
             esp_err_t writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
             esp_err_t writeByte(uint8_t regAddr, uint8_t data);
@@ -87,6 +94,13 @@ namespace dps
     inline esp_err_t DPS::readByteBitfield(RegMask_t regMask, uint8_t* data){
         readByte(regMask.regAddress,data);
         *data = ((*data) & regMask.mask) >> regMask.shift;
+        return err_;
+    }
+    /*! Read data from sequence of registers */
+    inline esp_err_t DPS::readBlock(RegBlock_t regBlock, uint8_t* data){
+        //mask regAddress
+	    regBlock.regAddress &= ~(0x80); //register address is 7bit
+        readBytes(regBlock.regAddress,regBlock.length,data);
         return err_;
     }
     /*! Write a single bit to a register */

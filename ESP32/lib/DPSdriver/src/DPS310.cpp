@@ -42,13 +42,13 @@ namespace dps310
             return;
         }
         //find out which temperature sensor is calibrated with coefficients...
-	    if (DPS_ERR_CHECK(readByteBitfield(registers[TEMP_SENSORREC], &m_tempSensor)))
+	    if (DPS_ERR_CHECK(readByteBitfield(registers[TEMP_SENSORREC], &m_tempSensor_)))
         {
             m_initFail = 1U;
             return;
         }
         //...and use this sensor for temperature measurement
-        if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor)))
+        if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor_)))
         {
 		    m_initFail = 1U;
 		    return;
@@ -66,50 +66,62 @@ namespace dps310
 	    configTemp(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
 	    configPressure(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
 
-        switch (tmp_over_sampling_rate_)
-        {
-        case 1:
-            tmp_scale_factor_ = SCALE_FACTOR_1;
-            break;
-        case 2:
-            tmp_scale_factor_ = SCALE_FACTOR_2;
-            break;
-        case 3:
-            tmp_scale_factor_ = SCALE_FACTOR_4;
-            break;
-        case 4:
-            tmp_scale_factor_ = SCALE_FACTOR_8;
-            break;
-        case 5:
-            tmp_scale_factor_ = SCALE_FACTOR_16;
-            break;
-        case 6:
-            tmp_scale_factor_ = SCALE_FACTOR_32;
-            break;
-        case 7:
-            tmp_scale_factor_ = SCALE_FACTOR_64;
-            break;
-        case 8:
-            tmp_scale_factor_ = SCALE_FACTOR_128;
-            break;
-        default:
-            tmp_scale_factor_ = SCALE_FACTOR_1;
-            break;
-        }
-
 	}
 
     esp_err_t DPS310::readcoeffs()
     {
         //acqire raw coefficient value
-        if(DPS_ERR_CHECK(readBytes(REG_COEF,11,buffer_)))return err_;
+        if(DPS_ERR_CHECK(readBlock(coeffBlock, buffer_)))return err_;
         uint32_t calib0 = (((uint32_t)(buffer_[0]) << 4)) | (((uint32_t)(buffer_[1]) >> 4) & 0x0F);
         m_c0Half_ = convert_complement<uint32_t,12>(calib0)/2U;
-        uint32_t calib1 = (((uint32_t)buffer_[1] & 0x0F) << 8) | buffer_[2];
+        uint32_t calib1 = (((uint32_t)buffer_[1] & 0x0F) << 8) | (uint32_t)(buffer_[2]);
         m_c1_ = convert_complement<uint32_t,12>(calib1);
+        uint32_t calib00 = (((uint32_t)buffer_[3]) << 12) | ((uint32_t)(buffer_[4]) << 4) | ((buffer_[5] >> 4) & 0x0F);
+        m_c00_ = convert_complement<uint32_t,20>(calib00);
+        uint32_t calib10 = (((uint32_t)buffer_[5] & 0x0F) << 16) | ((uint32_t)(buffer_[6]) << 8) | buffer_[7];
+        m_c10_ = convert_complement<uint32_t,16>(calib10);
+        uint32_t calib01 = (((uint32_t)buffer_[8] & 0x0F) << 8) | (uint32_t)(buffer_[9]);
+        m_c01_ = convert_complement<uint32_t,16>(calib01);
+        uint32_t calib11 = (((uint32_t)buffer_[10] & 0x0F) << 8) | (uint32_t)(buffer_[11]);
+        m_c11_ = convert_complement<uint32_t,16>(calib11);
+        uint32_t calib20 = (((uint32_t)buffer_[12] & 0x0F) << 8) | (uint32_t)(buffer_[13]);
+        m_c20_ = convert_complement<uint32_t,16>(calib20);
+        uint32_t calib21 = (((uint32_t)buffer_[14] & 0x0F) << 8) | (uint32_t)(buffer_[15]);
+        m_c21_ = convert_complement<uint32_t,16>(calib21);
+        uint32_t calib30 = (((uint32_t)buffer_[16] & 0x0F) << 8) | (uint32_t)(buffer_[17]);
+        m_c30_ = convert_complement<uint32_t,16>(calib30);
         return err_;
     }
+    float DPS310::calcTemp(int32_t raw)
+    {
+        float temp = raw;
 
+	    //scale temperature according to scaling table and oversampling
+	    temp /= scaling_facts[m_tempOsr];
+
+	    //update last measured temperature
+	    //it will be used for pressure compensation
+	    m_lastTempScal_ = temp;
+
+	    //Calculate compensated temperature
+	    temp = m_c0Half_ + m_c1_ * temp;
+
+	    return temp;
+    }
+
+	float DPS310::calcPressure(int32_t raw)
+    {
+        float prs = raw;
+
+	    //scale pressure according to scaling table and oversampling
+	    prs /= scaling_facts[m_prsOsr];
+
+	    //Calculate compensated pressure
+	    prs = m_c00_ + prs * (m_c10_ + prs * (m_c20_ + prs * m_c30_)) + m_lastTempScal_ * (m_c01_ + prs * (m_c11_ + prs * m_c21_));
+
+	    //return pressure
+	    return prs;
+    }
     esp_err_t DPS310::temperature(float &T_comp)
     {
 

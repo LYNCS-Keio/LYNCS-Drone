@@ -1,10 +1,26 @@
 #include "DPS.hpp"
+
+//convert 2´s complement numbers into signed integer numbers.
+template<class uint_type,unsigned int N>
+static inline int convert_complement(uint_type num){
+    int t = num;
+    if (num & (1 << (N-1)))
+    {
+        t = -(~(num - 1) & ((1 << N) - 1));
+    }
+    return t;
+}
+
 namespace dps
 {
+    const int32_t DPS::scaling_facts[DPS__NUM_OF_SCAL_FACTS] = {524288, 1572864, 3670016, 7864320, 253952, 516096, 1040384, 2088960};
+
     DPS::~DPS()
     {
         bus_->removeDevice(addr_);
     }
+    
+
     dps_err_t DPS::setOpMode(Mode opMode)
     {
         if (DPS_ERR_CHECK(writeByteBitfield(config_registers[MSR_CTRL], opMode))){
@@ -83,5 +99,62 @@ namespace dps
     dps_err_t DPS::startMeasureTempOnce()
     {
     	return startMeasureTempOnce(m_tempOsr);
+    }
+
+    dps_err_t DPS::getSingleResult(float &result)
+    {
+        //abort if initialization failed
+	    if (m_initFail)
+	    {
+	    	return DPS__FAIL_INIT_FAILED;
+	    }
+
+	    //read finished bit for current opMode
+	    uint8_t rdy;
+	    switch (m_opMode)
+	    {
+	    case CMD_TEMP: //temperature
+	    	readByteBitfield(config_registers[TEMP_RDY],&rdy);
+	    	break;
+	    case CMD_PRS: //pressure
+	    	readByteBitfield(config_registers[PRS_RDY],&rdy);
+	    	break;
+	    default: //DPS310 not in command mode
+	    	return DPS__FAIL_TOOBUSY;
+	    }
+        
+	    //read new measurement result
+	    switch (rdy)
+	    {
+	    case 0: //ready flag not set, measurement still in progress
+	    	return DPS__FAIL_UNFINISHED;
+	    case 1: //measurement ready, expected case
+	    	Mode oldMode = m_opMode;
+	    	m_opMode = IDLE; //opcode was automatically reseted by DPS310
+	    	int32_t raw_val;
+	    	switch (oldMode)
+	    	{
+	    	case CMD_TEMP: //temperature
+	    		getRawResult(&raw_val, registerBlocks[TEMP]);
+	    		result = calcTemp(raw_val);
+	    		return DPS__SUCCEEDED; // TODO
+	    	case CMD_PRS:			   //pressure
+	    		getRawResult(&raw_val, registerBlocks[PRS]);
+	    		result = calcPressure(raw_val);
+	    		return DPS__SUCCEEDED; // TODO
+	    	default:
+	    		return DPS__FAIL_UNKNOWN; //should already be filtered above
+	    	}
+	    }
+    return DPS__FAIL_UNKNOWN;
+    }
+    dps_err_t DPS::getRawResult(int32_t *raw, RegBlock_t reg)
+    {
+	    uint8_t buffer[DPS__RESULT_BLOCK_LENGTH] = {0};
+	    if (DPS_ERR_CHECK(readBlock(reg, buffer)))return DPS__FAIL_UNKNOWN;
+
+	    *raw = (uint32_t)buffer[0] << 16 | (uint32_t)buffer[1] << 8 | (uint32_t)buffer[2];
+	    *raw = convert_complement<int32_t,24>(*raw);
+	    return DPS__SUCCEEDED;
     }
 } // namespace dps

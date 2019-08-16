@@ -25,10 +25,20 @@ namespace dps310
 	 */
 	uint8_t tmp_rate_;
 	uint8_t measure_tontrol_;
-	uint8_t m_tempSensor;
+	uint8_t m_tempSensor_;
   //compensation coefficients
-  	int32_t m_c0Half_;	//temperature coefficient value
-  	int32_t m_c1_;		//temperature coefficient value
+  	int32_t m_c0Half_;		//temperature coefficient value
+  	int32_t m_c1_;			//temperature coefficient value
+	int32_t m_c00_;			//pressure coefficient value
+	int32_t m_c10_;			//pressure coefficient value
+	int32_t m_c01_;			//pressure coefficient value
+	int32_t m_c11_;			//pressure coefficient value
+	int32_t m_c20_;			//pressure coefficient value
+	int32_t m_c21_;			//pressure coefficient value
+	int32_t m_c30_;			//pressure coefficient value
+	float m_lastTempScal_;	//it will be used for pressure compensation
+	float calcTemp(int32_t raw);
+	float calcPressure(int32_t raw);
 	protected:
 	public:
 		DPS310(dps_bus_t *bus, int cs_pin_num);
