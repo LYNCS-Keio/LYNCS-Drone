@@ -37,6 +37,9 @@ namespace dps
         dps_err_t getRawResult(int32_t *raw, RegBlock_t reg);
         dps_err_t getSingleResult(float &result);
         dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
+        dps_err_t measureTempOnce(float &result);
+        dps_err_t correctTemp();
+        uint16_t calcBusyTime(uint16_t mr, uint16_t osr);
         virtual float calcTemp(int32_t raw) = 0;
         virtual float calcPressure(int32_t raw) = 0;
         	//flags

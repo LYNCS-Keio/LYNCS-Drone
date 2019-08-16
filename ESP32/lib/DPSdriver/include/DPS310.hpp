@@ -27,7 +27,7 @@ namespace dps310
 	uint8_t measure_tontrol_;
 	uint8_t m_tempSensor_;
   //compensation coefficients
-  	int32_t m_c0Half_;		//temperature coefficient value
+  	float m_c0Half_;		//temperature coefficient value
   	int32_t m_c1_;			//temperature coefficient value
 	int32_t m_c00_;			//pressure coefficient value
 	int32_t m_c10_;			//pressure coefficient value

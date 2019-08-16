@@ -148,6 +148,7 @@ namespace dps
 	    }
     return DPS__FAIL_UNKNOWN;
     }
+
     dps_err_t DPS::getRawResult(int32_t *raw, RegBlock_t reg)
     {
 	    uint8_t buffer[DPS__RESULT_BLOCK_LENGTH] = {0};
@@ -157,4 +158,52 @@ namespace dps
 	    *raw = convert_complement<int32_t,24>(*raw);
 	    return DPS__SUCCEEDED;
     }
+    uint16_t DPS::calcBusyTime(uint16_t mr, uint16_t osr)
+	{
+		//formula from datasheet (optimized)
+		return ((uint32_t)20U << mr) + ((uint32_t)16U << (osr + mr));
+	}
+
+	dps_err_t DPS::measureTempOnce(float &result, uint8_t oversamplingRate)
+	{
+		//Start measurement
+		dps_err_t ret = startMeasureTempOnce(oversamplingRate);
+		if (ret != DPS__SUCCEEDED)
+		{
+			return ret;
+		}
+		//wait until measurement is finished
+		ets_delay_us(calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
+
+		ret = getSingleResult(result);
+		if (ret != DPS__SUCCEEDED)
+		{
+			standby();
+		}
+		return ret;
+	}
+
+	dps_err_t DPS::measureTempOnce(float &result)
+	{
+		return measureTempOnce(result, m_tempOsr);
+	}
+	dps_err_t DPS::correctTemp()
+	{
+		if (m_initFail)
+		{
+			return DPS__FAIL_INIT_FAILED;
+		}
+		writeByte(0x0E, 0xA5);
+		writeByte(0x0F, 0x96);
+		writeByte(0x62, 0x02);
+		writeByte(0x0E, 0x00);
+		writeByte(0x0F, 0x00);
+		//perform a first temperature measurement (again)
+		//the most recent temperature will be saved internally
+		//and used for compensation when calculating pressure
+		float trash;
+		measureTempOnce(trash);
+
+		return DPS__SUCCEEDED;
+	}
 } // namespace dps

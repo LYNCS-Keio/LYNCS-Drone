@@ -61,11 +61,20 @@ namespace dps310
 	    }
         //set to standby for further configuration
 	    standby();
-
 	    //set measurement precision and rate to standard values;
 	    configTemp(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
 	    configPressure(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
+        //perform a first temperature measurement
+	    //the most recent temperature will be saved internally
+	    //and used for compensation when calculating pressure
+	    float trash;
+        measureTempOnce(trash);
 
+	    //make sure the DPS310 is in standby after initialization
+	    standby();
+        // Fix IC with a fuse bit problem, which lead to a wrong temperature
+	    // Should not affect ICs without this problem
+	    correctTemp();
 	}
 
     esp_err_t DPS310::readcoeffs()
@@ -124,24 +133,11 @@ namespace dps310
     }
     esp_err_t DPS310::temperature(float &T_comp)
     {
-
-        //prepare
-        if(DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,0x02)))return err_;
-
-        
-
-        //acqire raw temperature value
-        if(DPS_ERR_CHECK(readBytes(REG_TMP_B2,3,buffer_)))return err_;
-        uint32_t temp = ((buffer_[0] << 16) & 0xFF0000) | ((buffer_[1] << 8) & 0x00FF00) | (buffer_[2]);
-
-        float T_raw_sc = float(convert_complement<uint32_t,24>(temp))/tmp_scale_factor_;
-        printf("T=%x\n",temp);
-        printf("---------converted\n");
-        printf("calib0/2=%d\n",m_c0Half_);
-        printf("calib1=%d\n",m_c1_);
-        printf("T=%f\n",T_raw_sc);
-        T_comp = (float(m_c0Half_)) + T_raw_sc*float(m_c1_);
-        
+        float T = 0;
+        measureTempOnce(T);
+        printf("T = %f\n",T);
+        printf("c0 = %f\n",m_c0Half_);
+        printf("c1 = %d\n",m_c1_);
         return err_;
     }
 } // namespace dps
