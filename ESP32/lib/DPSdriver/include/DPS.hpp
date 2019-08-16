@@ -20,6 +20,12 @@ namespace dps
         uint8_t buffer_[16];     /*!< Commom buffer for temporary data */
         esp_err_t err_;
         virtual esp_err_t flushFIFO() = 0;
+        	//flags
+	    uint8_t m_initFail;
+    
+	    uint8_t m_productID;
+	    uint8_t m_revisionID;
+
         DPS(){}
     public:
         DPS(dps_bus_t *bus) : bus_{bus}, buffer_{0}, err_{ESP_OK}

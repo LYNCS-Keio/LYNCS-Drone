@@ -24,8 +24,10 @@ namespace dps310
 	 */
 	uint8_t tmp_rate_;
 	uint8_t measure_tontrol_;
+	uint8_t m_tempSensor;
 	int c0_; //temperature coefficient value
 	int c1_; //temperature coefficient value
+	protected:
 	public:
 		DPS310(dps_bus_t *bus, int cs_pin_num);
 		~DPS310(){};
@@ -43,7 +45,7 @@ namespace dps310
 		void setTmpRate(bool rate){tmp_rate_ = rate;}
 		void setTmpOversamplingRate(int over_sampling_rate){tmp_over_sampling_rate_ = over_sampling_rate;}
 		void setMeasCtrl(uint8_t measure_tontrol){measure_tontrol_ =measure_tontrol;}
-		esp_err_t initiarize();
+		void initiarize();
 		esp_err_t temperature(float &T_comp);
 	};
 } // namespace dps

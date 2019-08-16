@@ -29,7 +29,31 @@ namespace dps310
         writeByteBitfield(registers[FIFO_EN],1U);
         return err_;
     }
-    esp_err_t DPS310::initiarize(){
+    void DPS310::initiarize(){
+        
+        if(DPS_ERR_CHECK(readByteBitField(registers[PROD_ID], &m_productID)))
+        {
+            m_initFail = 1U;
+            return;
+        }
+        if(DPS_ERR_CHECK(readByteBitField(registers[REV_ID], &m_revisionID)))
+        {
+            m_initFail = 1U;
+            return;
+        }
+        //find out which temperature sensor is calibrated with coefficients...
+	    if(DPS_ERR_CHECK(readByteBitField(registers[TEMP_SENSORREC], &m_tempSensor)))
+        {
+            m_initFail = 1U;
+            return;
+        }
+        //...and use this sensor for temperature measurement
+        if(DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor)))
+        {
+		    m_initFail = 1U;
+		    return;
+        }
+        
         uint8_t TMP_CFG = 0x00;
         uint8_t MEAS_CTRL = 0xC0;
         uint8_t CFG_REG = 0x00;
@@ -87,11 +111,10 @@ namespace dps310
 
 
         //set configuration
-		if(DPS_ERR_CHECK(writeByte(REG_TMP_CFG,TMP_CFG)))return err_;//TMP_CFG : temparature measurement configuration
-		if(DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,MEAS_CTRL)))return err_;//MEAS_CTRL  : temparature measurement configuration
-		if(DPS_ERR_CHECK(writeByte(REG_CFG_REG,CFG_REG)))return err_;//CFG_REG;
-        if(DPS_ERR_CHECK(writeByte(REG_TMP_COEF_SRCE,TMP_COEF_SRCE)))return err_;//TMP_COEF_SRCE 
-		return err_;
+		if(DPS_ERR_CHECK(writeByte(REG_TMP_CFG,TMP_CFG)))return;//TMP_CFG : temparature measurement configuration
+		if(DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,MEAS_CTRL)))return;//MEAS_CTRL  : temparature measurement configuration
+		if(DPS_ERR_CHECK(writeByte(REG_CFG_REG,CFG_REG)))return;//CFG_REG;
+        if(DPS_ERR_CHECK(writeByte(REG_TMP_COEF_SRCE,TMP_COEF_SRCE)))return;//TMP_COEF_SRCE 
 	}
 
     esp_err_t DPS310::temperature(float &T_comp){
