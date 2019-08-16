@@ -32,4 +32,13 @@ namespace dps
 	    if (DPS_ERR_CHECK(disableFIFO()))return DPS__FAIL_CANNOT_WRITE_REG;
 	    return DPS__SUCCEEDED;
     }
+    dps_err_t DPS::configTemp(uint8_t tempMr, uint8_t tempOsr){
+        tempMr &= 0x07;
+	    tempOsr &= 0x07;
+	    // two accesses to the same register; for readability
+	    if (DPS_ERR_CHECK(writeByteBitfield(config_registers[TEMP_MR], tempMr)))return DPS__FAIL_UNKNOWN;
+	    if (DPS_ERR_CHECK(writeByteBitfield(config_registers[TEMP_OSR], tempOsr)))return DPS__FAIL_UNKNOWN;
+	    m_tempMr = tempMr;
+	    m_tempOsr = tempOsr;
+    }
 } // namespace dps

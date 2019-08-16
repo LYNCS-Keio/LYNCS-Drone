@@ -25,6 +25,9 @@ namespace dps
         dps_err_t setOpMode(Mode opMode);
         esp_err_t disableFIFO();
         dps_err_t standby();
+        uint8_t m_tempMr;       //Temperature measurement rate
+        uint8_t m_tempOsr;      //Temperature oversampling rate
+        dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr);
         	//flags
 	    uint8_t m_initFail;
 
