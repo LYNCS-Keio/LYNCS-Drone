@@ -101,6 +101,35 @@ namespace dps
     	return startMeasureTempOnce(m_tempOsr);
     }
 
+	dps_err_t DPS::startMeasurePressureOnce(uint8_t oversamplingRate)
+	{
+		//abort if initialization failed
+		if (m_initFail)
+		{
+			return DPS__FAIL_INIT_FAILED;
+		}
+		//abort if device is not in idling mode
+		if (m_opMode != IDLE)
+		{
+			return DPS__FAIL_TOOBUSY;
+		}
+		//configuration of oversampling rate, lowest measure rate to avoid conflicts
+		if (oversamplingRate != m_prsOsr)
+		{
+			if (configPressure(0U, oversamplingRate))
+			{
+				return DPS__FAIL_UNKNOWN;
+			}
+		}
+		//set device to pressure measuring mode
+		return setOpMode(CMD_PRS);
+	}
+
+	dps_err_t DPS::startMeasurePressureOnce()
+	{
+		return startMeasurePressureOnce(m_prsOsr);
+	}
+
     dps_err_t DPS::getSingleResult(float &result)
     {
         //abort if initialization failed

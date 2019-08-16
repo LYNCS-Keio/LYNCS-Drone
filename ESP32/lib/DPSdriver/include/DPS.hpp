@@ -34,6 +34,8 @@ namespace dps
         dps_err_t configPressure(uint8_t prs_mr, uint8_t prs_osr);
         dps_err_t startMeasureTempOnce(uint8_t oversamplingRate);
         dps_err_t startMeasureTempOnce();
+        dps_err_t startMeasurePressureOnce(uint8_t oversamplingRate);
+        dps_err_t startMeasurePressureOnce();
         dps_err_t getRawResult(int32_t *raw, RegBlock_t reg);
         dps_err_t getSingleResult(float &result);
         dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
