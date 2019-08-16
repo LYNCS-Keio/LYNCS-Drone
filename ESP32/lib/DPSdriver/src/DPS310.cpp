@@ -1,5 +1,7 @@
 #include "DPS310.hpp"
 #include "DPS310K.hpp"
+#include "../util/dps_const.hpp"
+#include "../util/dps310_config.hpp"
 #include <stdio.h>
 
 //convert 2´s complement numbers into signed integer numbers.
@@ -12,7 +14,7 @@ static inline int convert_complement(uint_type num){
     }
     return t;
 }
-namespace dps
+namespace dps310
 {
 
     DPS310::DPS310(dps_bus_t *bus, int cs_pin_num) : DPS(bus),
@@ -24,7 +26,7 @@ namespace dps
         
     }
     esp_err_t DPS310::flushFIFO(){
-        writeBit(REG_CFG_REG,1,1U);
+        writeByteBitfield(registers[FIFO_EN],1U);
         return err_;
     }
     esp_err_t DPS310::initiarize(){

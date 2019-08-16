@@ -2,8 +2,9 @@
 
 #include "DPS.hpp"
 
-namespace dps
+namespace dps310
 {
+	using namespace dps;
 	class DPS310 : public DPS
 	{
 	private:

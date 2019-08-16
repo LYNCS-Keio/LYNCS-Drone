@@ -2,15 +2,6 @@
 #include "dps_register.hpp"
 #define DPS310_NUM_OF_REGMASKS 16
 
-enum Interrupt_source_310_e
-{
-    DPS310_NO_INTR = 0,
-    DPS310_PRS_INTR = 1,
-    DPS310_TEMP_INTR = 2,
-    DPS310_BOTH_INTR = 3,
-    DPS310_FIFO_FULL_INTR = 4,
-};
-
 namespace dps310
 {
 
