@@ -33,6 +33,7 @@ namespace dps
             esp_err_t readBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t* data);
             esp_err_t readByte(uint8_t regAddr, uint8_t* data);
             esp_err_t readBytes(uint8_t regAddr, size_t length, uint8_t* data);
+            esp_err_t readByteBitField(RegMask_t regMask, uint8_t* data);
             esp_err_t writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
             esp_err_t writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
             esp_err_t writeByte(uint8_t regAddr, uint8_t data);
@@ -63,6 +64,11 @@ namespace dps
     inline esp_err_t DPS::readBytes(uint8_t regAddr, size_t length, uint8_t* data)
     {
         return err_ = bus_->readBytes(addr_, regAddr, length, data);
+    }
+    inline esp_err_t DPS::readByteBitField(RegMask_t regMask, uint8_t* data){
+        readByte(regMask.regAddress,data);
+        *data = ((*data) & regMask.mask) >> regMask.shift;
+        return err_;
     }
     /*! Write a single bit to a register */
     inline esp_err_t DPS::writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data)
