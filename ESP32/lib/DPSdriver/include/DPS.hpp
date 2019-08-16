@@ -20,9 +20,10 @@ namespace dps
         uint8_t buffer_[16];     /*!< Commom buffer for temporary data */
         esp_err_t err_;
         virtual esp_err_t flushFIFO() = 0;
+        virtual esp_err_t readcoeffs() = 0;
         	//flags
 	    uint8_t m_initFail;
-    
+
 	    uint8_t m_productID;
 	    uint8_t m_revisionID;
 

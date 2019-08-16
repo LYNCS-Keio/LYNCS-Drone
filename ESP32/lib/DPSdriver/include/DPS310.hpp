@@ -9,6 +9,7 @@ namespace dps310
 	{
 	private:
 	esp_err_t flushFIFO();
+	esp_err_t readcoeffs();
 	bool tmp_ext_flag_;// used for TMP_EXT configuration. 0 - Internal sensor (in ASIC), 1 - External sensor (in pressure sensor MEMS element).
 	unsigned int tmp_over_sampling_rate_;
 	int tmp_scale_factor_;
@@ -25,8 +26,9 @@ namespace dps310
 	uint8_t tmp_rate_;
 	uint8_t measure_tontrol_;
 	uint8_t m_tempSensor;
-	int c0_; //temperature coefficient value
-	int c1_; //temperature coefficient value
+  //compensation coefficients
+  	int32_t m_c0Half_;	//temperature coefficient value
+  	int32_t m_c1_;		//temperature coefficient value
 	protected:
 	public:
 		DPS310(dps_bus_t *bus, int cs_pin_num);

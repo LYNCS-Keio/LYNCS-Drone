@@ -31,29 +31,34 @@ namespace dps310
     }
     void DPS310::initiarize(){
         
-        if(DPS_ERR_CHECK(readByteBitField(registers[PROD_ID], &m_productID)))
+        if (DPS_ERR_CHECK(readByteBitField(registers[PROD_ID], &m_productID)))
         {
             m_initFail = 1U;
             return;
         }
-        if(DPS_ERR_CHECK(readByteBitField(registers[REV_ID], &m_revisionID)))
+        if (DPS_ERR_CHECK(readByteBitField(registers[REV_ID], &m_revisionID)))
         {
             m_initFail = 1U;
             return;
         }
         //find out which temperature sensor is calibrated with coefficients...
-	    if(DPS_ERR_CHECK(readByteBitField(registers[TEMP_SENSORREC], &m_tempSensor)))
+	    if (DPS_ERR_CHECK(readByteBitField(registers[TEMP_SENSORREC], &m_tempSensor)))
         {
             m_initFail = 1U;
             return;
         }
         //...and use this sensor for temperature measurement
-        if(DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor)))
+        if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor)))
         {
 		    m_initFail = 1U;
 		    return;
         }
-        
+        //read coefficients
+	    if (DPS_ERR_CHECK(readcoeffs()))
+	    {
+	    	m_initFail = 1U;
+	    	return;
+	    }
         uint8_t TMP_CFG = 0x00;
         uint8_t MEAS_CTRL = 0xC0;
         uint8_t CFG_REG = 0x00;
@@ -111,23 +116,28 @@ namespace dps310
 
 
         //set configuration
-		if(DPS_ERR_CHECK(writeByte(REG_TMP_CFG,TMP_CFG)))return;//TMP_CFG : temparature measurement configuration
-		if(DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,MEAS_CTRL)))return;//MEAS_CTRL  : temparature measurement configuration
-		if(DPS_ERR_CHECK(writeByte(REG_CFG_REG,CFG_REG)))return;//CFG_REG;
-        if(DPS_ERR_CHECK(writeByte(REG_TMP_COEF_SRCE,TMP_COEF_SRCE)))return;//TMP_COEF_SRCE 
+		if (DPS_ERR_CHECK(writeByte(REG_TMP_CFG,TMP_CFG)))return;//TMP_CFG : temparature measurement configuration
+		if (DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,MEAS_CTRL)))return;//MEAS_CTRL  : temparature measurement configuration
+		if (DPS_ERR_CHECK(writeByte(REG_CFG_REG,CFG_REG)))return;//CFG_REG;
+        if (DPS_ERR_CHECK(writeByte(REG_TMP_COEF_SRCE,TMP_COEF_SRCE)))return;//TMP_COEF_SRCE 
 	}
+
+    esp_err_t DPS310::readcoeffs(){
+        //acqire raw coefficient value
+        if(DPS_ERR_CHECK(readBytes(REG_COEF,11,buffer_)))return err_;
+        uint32_t calib0 = (((uint32_t)(buffer_[0]) << 4)) | (((uint32_t)(buffer_[1]) >> 4) & 0x0F);
+        m_c0Half_ = convert_complement<uint32_t,12>(calib0)/2U;
+        uint32_t calib1 = (((uint32_t)buffer_[1] & 0x0F) << 8) | buffer_[2];
+        m_c1_ = convert_complement<uint32_t,12>(calib1);
+        return err_;
+    }
 
     esp_err_t DPS310::temperature(float &T_comp){
 
         //prepare
         if(DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,0x02)))return err_;
 
-        //acqire raw coefficient value
-        if(DPS_ERR_CHECK(readBytes(REG_COEF,11,buffer_)))return err_;
-        uint32_t calib0 = (((uint32_t)(buffer_[0]) << 4)) | (((uint32_t)(buffer_[1]) >> 4) & 0x0F);
-        c0_ = convert_complement<uint32_t,12>(calib0);
-        uint32_t calib1 = (((uint32_t)buffer_[1] & 0x0F) << 8) | buffer_[2];
-        c1_ = convert_complement<uint32_t,12>(calib1);
+        
 
         //acqire raw temperature value
         if(DPS_ERR_CHECK(readBytes(REG_TMP_B2,3,buffer_)))return err_;
@@ -136,10 +146,10 @@ namespace dps310
         float T_raw_sc = float(convert_complement<uint32_t,24>(temp))/tmp_scale_factor_;
         printf("T=%x\n",temp);
         printf("---------converted\n");
-        printf("calib0=%d\n",c0_);
-        printf("calib1=%d\n",c1_);
+        printf("calib0/2=%d\n",m_c0Half_);
+        printf("calib1=%d\n",m_c1_);
         printf("T=%f\n",T_raw_sc);
-        T_comp = (float(c0_)*0.5) + T_raw_sc*float(c1_);
+        T_comp = (float(m_c0Half_)) + T_raw_sc*float(m_c1_);
         
         return err_;
     }
