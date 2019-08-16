@@ -31,7 +31,8 @@ namespace dps
         uint8_t m_prsOsr;         //Pressure oversampling rate
         dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr);
         dps_err_t configPressure(uint8_t prs_mr, uint8_t prs_osr);
-
+        dps_err_t startMeasureTempOnce(uint8_t oversamplingRate);
+        dps_err_t startMeasureTempOnce();
         	//flags
 	    uint8_t m_initFail;
 

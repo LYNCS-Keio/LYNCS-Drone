@@ -57,4 +57,31 @@ namespace dps
 	    m_prsOsr = prsOsr;
         return DPS__SUCCEEDED;
     }
+    dps_err_t DPS::startMeasureTempOnce(uint8_t oversamplingRate)
+    {
+        //abort if initialization failed
+	    if (m_initFail)
+	    {
+	    	return DPS__FAIL_INIT_FAILED;
+	    }
+	    //abort if device is not in idling mode
+	    if (m_opMode != IDLE)
+	    {
+	    	return DPS__FAIL_TOOBUSY;
+	    }
+	    if (oversamplingRate != m_tempOsr)
+	    {
+	    	//configuration of oversampling rate
+	    	if (configTemp(0U, oversamplingRate) != DPS__SUCCEEDED)
+	    	{
+	    		return DPS__FAIL_UNKNOWN;
+	    	}
+	    }
+	    //set device to temperature measuring mode
+	    return setOpMode(CMD_TEMP);
+    }
+    dps_err_t DPS::startMeasureTempOnce()
+    {
+    	return startMeasureTempOnce(m_tempOsr);
+    }
 } // namespace dps

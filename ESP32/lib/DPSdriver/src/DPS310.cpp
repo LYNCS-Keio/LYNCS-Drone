@@ -59,67 +59,44 @@ namespace dps310
 	    	m_initFail = 1U;
 	    	return;
 	    }
-        uint8_t TMP_CFG = 0x00;
-        uint8_t MEAS_CTRL = 0xC0;
-        uint8_t CFG_REG = 0x00;
-        uint8_t TMP_COEF_SRCE = 0x00;
+        //set to standby for further configuration
+	    standby();
 
-        TMP_CFG |= (tmp_ext_flag_ << 7);
-        TMP_CFG |= (tmp_rate_ << 4);
-        TMP_COEF_SRCE |= (tmp_ext_flag_ << 7);
-        
-        MEAS_CTRL |= measure_tontrol_;
+	    //set measurement precision and rate to standard values;
+	    configTemp(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
+	    configPressure(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
 
         switch (tmp_over_sampling_rate_)
         {
         case 1:
             tmp_scale_factor_ = SCALE_FACTOR_1;
-            TMP_CFG |= 0x00;
             break;
         case 2:
             tmp_scale_factor_ = SCALE_FACTOR_2;
-            TMP_CFG |= 0x01;
+            break;
+        case 3:
+            tmp_scale_factor_ = SCALE_FACTOR_4;
             break;
         case 4:
-            tmp_scale_factor_ = SCALE_FACTOR_4;
-            TMP_CFG |= 0x02;
+            tmp_scale_factor_ = SCALE_FACTOR_8;
+            break;
+        case 5:
+            tmp_scale_factor_ = SCALE_FACTOR_16;
+            break;
+        case 6:
+            tmp_scale_factor_ = SCALE_FACTOR_32;
+            break;
+        case 7:
+            tmp_scale_factor_ = SCALE_FACTOR_64;
             break;
         case 8:
-            tmp_scale_factor_ = SCALE_FACTOR_8;
-            TMP_CFG |= 0x03;
-            break;
-        case 16:
-            tmp_scale_factor_ = SCALE_FACTOR_16;
-            TMP_CFG |= 0x04;
-            CFG_REG |= 0x08;
-            break;
-        case 32:
-            tmp_scale_factor_ = SCALE_FACTOR_32;
-            TMP_CFG |= 0x05;
-            CFG_REG |= 0x08;
-            break;
-        case 64:
-            tmp_scale_factor_ = SCALE_FACTOR_64;
-            TMP_CFG |= 0x06;
-            CFG_REG |= 0x08;
-            break;
-        case 128:
             tmp_scale_factor_ = SCALE_FACTOR_128;
-            TMP_CFG |= 0x07;
-            CFG_REG |= 0x08;
             break;
         default:
             tmp_scale_factor_ = SCALE_FACTOR_1;
-            TMP_CFG |= 0x00;
             break;
         }
 
-
-        //set configuration
-		if (DPS_ERR_CHECK(writeByte(REG_TMP_CFG,TMP_CFG)))return;//TMP_CFG : temparature measurement configuration
-		if (DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,MEAS_CTRL)))return;//MEAS_CTRL  : temparature measurement configuration
-		if (DPS_ERR_CHECK(writeByte(REG_CFG_REG,CFG_REG)))return;//CFG_REG;
-        if (DPS_ERR_CHECK(writeByte(REG_TMP_COEF_SRCE,TMP_COEF_SRCE)))return;//TMP_COEF_SRCE 
 	}
 
     esp_err_t DPS310::readcoeffs()
