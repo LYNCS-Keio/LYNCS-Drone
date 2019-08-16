@@ -12,4 +12,9 @@ namespace dps
         m_opMode = (Mode)opMode;
 	    return DPS__SUCCEEDED;
     }
+    esp_err_t DPS::disableFIFO(){
+        if (DPS_ERR_CHECK(flushFIFO()))return err_;
+        if (DPS_ERR_CHECK(writeByteBitfield(config_registers[FIFO_EN],0U)))return err_;
+	    return err_;
+    }
 } // namespace dps

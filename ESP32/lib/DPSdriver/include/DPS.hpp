@@ -23,6 +23,7 @@ namespace dps
         virtual esp_err_t flushFIFO() = 0;
         virtual esp_err_t readcoeffs() = 0;
         dps_err_t setOpMode(Mode opMode);
+        esp_err_t disableFIFO();
         	//flags
 	    uint8_t m_initFail;
 
