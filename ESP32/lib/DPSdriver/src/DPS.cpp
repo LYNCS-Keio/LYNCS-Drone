@@ -5,19 +5,22 @@ namespace dps
     {
         bus_->removeDevice(addr_);
     }
-    dps_err_t DPS::setOpMode(Mode opMode){
+    dps_err_t DPS::setOpMode(Mode opMode)
+    {
         if (DPS_ERR_CHECK(writeByteBitfield(config_registers[MSR_CTRL], opMode))){
             return DPS__FAIL_UNKNOWN;
         }
         m_opMode = (Mode)opMode;
 	    return DPS__SUCCEEDED;
     }
-    esp_err_t DPS::disableFIFO(){
+    esp_err_t DPS::disableFIFO()
+    {
         if (DPS_ERR_CHECK(flushFIFO()))return err_;
         if (DPS_ERR_CHECK(writeByteBitfield(config_registers[FIFO_EN],0U)))return err_;
 	    return err_;
     }
-    dps_err_t DPS::standby(){
+    dps_err_t DPS::standby()
+    {
         //abort if initialization failed
 	    if (m_initFail)
 	    {
@@ -32,7 +35,8 @@ namespace dps
 	    if (DPS_ERR_CHECK(disableFIFO()))return DPS__FAIL_CANNOT_WRITE_REG;
 	    return DPS__SUCCEEDED;
     }
-    dps_err_t DPS::configTemp(uint8_t tempMr, uint8_t tempOsr){
+    dps_err_t DPS::configTemp(uint8_t tempMr, uint8_t tempOsr)
+    {
         tempMr &= 0x07;
 	    tempOsr &= 0x07;
 	    // two accesses to the same register; for readability
@@ -40,5 +44,17 @@ namespace dps
 	    if (DPS_ERR_CHECK(writeByteBitfield(config_registers[TEMP_OSR], tempOsr)))return DPS__FAIL_UNKNOWN;
 	    m_tempMr = tempMr;
 	    m_tempOsr = tempOsr;
+        return DPS__SUCCEEDED;
+    }
+    dps_err_t DPS::configPressure(uint8_t prsMr, uint8_t prsOsr)
+    {
+        prsMr &= 0x07;
+	    prsOsr &= 0x07;
+        //abort immediately on fail
+        if (DPS_ERR_CHECK(writeByteBitfield(config_registers[PRS_MR], prsMr)))return DPS__FAIL_UNKNOWN;
+	    if (DPS_ERR_CHECK(writeByteBitfield(config_registers[PRS_OSR], prsOsr)))return DPS__FAIL_UNKNOWN;
+	    m_prsMr = prsMr;
+	    m_prsOsr = prsOsr;
+        return DPS__SUCCEEDED;
     }
 } // namespace dps

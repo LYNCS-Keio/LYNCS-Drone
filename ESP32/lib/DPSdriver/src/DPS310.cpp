@@ -31,18 +31,18 @@ namespace dps310
     }
     void DPS310::initiarize(){
         
-        if (DPS_ERR_CHECK(readByteBitField(registers[PROD_ID], &m_productID)))
+        if (DPS_ERR_CHECK(readByteBitfield(registers[PROD_ID], &m_productID)))
         {
             m_initFail = 1U;
             return;
         }
-        if (DPS_ERR_CHECK(readByteBitField(registers[REV_ID], &m_revisionID)))
+        if (DPS_ERR_CHECK(readByteBitfield(registers[REV_ID], &m_revisionID)))
         {
             m_initFail = 1U;
             return;
         }
         //find out which temperature sensor is calibrated with coefficients...
-	    if (DPS_ERR_CHECK(readByteBitField(registers[TEMP_SENSORREC], &m_tempSensor)))
+	    if (DPS_ERR_CHECK(readByteBitfield(registers[TEMP_SENSORREC], &m_tempSensor)))
         {
             m_initFail = 1U;
             return;
@@ -122,7 +122,8 @@ namespace dps310
         if (DPS_ERR_CHECK(writeByte(REG_TMP_COEF_SRCE,TMP_COEF_SRCE)))return;//TMP_COEF_SRCE 
 	}
 
-    esp_err_t DPS310::readcoeffs(){
+    esp_err_t DPS310::readcoeffs()
+    {
         //acqire raw coefficient value
         if(DPS_ERR_CHECK(readBytes(REG_COEF,11,buffer_)))return err_;
         uint32_t calib0 = (((uint32_t)(buffer_[0]) << 4)) | (((uint32_t)(buffer_[1]) >> 4) & 0x0F);
@@ -132,7 +133,8 @@ namespace dps310
         return err_;
     }
 
-    esp_err_t DPS310::temperature(float &T_comp){
+    esp_err_t DPS310::temperature(float &T_comp)
+    {
 
         //prepare
         if(DPS_ERR_CHECK(writeByte(REG_MEAS_CFG,0x02)))return err_;

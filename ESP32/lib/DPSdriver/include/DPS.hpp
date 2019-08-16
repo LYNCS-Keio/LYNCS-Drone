@@ -27,7 +27,11 @@ namespace dps
         dps_err_t standby();
         uint8_t m_tempMr;       //Temperature measurement rate
         uint8_t m_tempOsr;      //Temperature oversampling rate
+        uint8_t m_prsMr;        //Pressure measurement rate
+        uint8_t m_prsOsr;         //Pressure oversampling rate
         dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr);
+        dps_err_t configPressure(uint8_t prs_mr, uint8_t prs_osr);
+
         	//flags
 	    uint8_t m_initFail;
 
@@ -47,7 +51,7 @@ namespace dps
             esp_err_t readBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t* data);
             esp_err_t readByte(uint8_t regAddr, uint8_t* data);
             esp_err_t readBytes(uint8_t regAddr, size_t length, uint8_t* data);
-            esp_err_t readByteBitField(RegMask_t regMask, uint8_t* data);
+            esp_err_t readByteBitfield(RegMask_t regMask, uint8_t* data);
             esp_err_t writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
             esp_err_t writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
             esp_err_t writeByte(uint8_t regAddr, uint8_t data);
@@ -79,7 +83,7 @@ namespace dps
     {
         return err_ = bus_->readBytes(addr_, regAddr, length, data);
     }
-    inline esp_err_t DPS::readByteBitField(RegMask_t regMask, uint8_t* data){
+    inline esp_err_t DPS::readByteBitfield(RegMask_t regMask, uint8_t* data){
         readByte(regMask.regAddress,data);
         *data = ((*data) & regMask.mask) >> regMask.shift;
         return err_;
