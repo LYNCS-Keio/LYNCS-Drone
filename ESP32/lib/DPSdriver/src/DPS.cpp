@@ -235,4 +235,29 @@ namespace dps
 
 		return DPS__SUCCEEDED;
 	}
+
+	dps_err_t DPS::measurePressureOnce(float &result, uint8_t oversamplingRate)
+	{
+		//start the measurement
+		dps_err_t ret = startMeasurePressureOnce(oversamplingRate);
+		if (ret != DPS__SUCCEEDED)
+		{
+			return ret;
+		}
+		//wait until measurement is finished
+		ets_delay_us(calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
+
+		ret = getSingleResult(result);
+		if (ret != DPS__SUCCEEDED)
+		{
+			standby();
+		}
+		return ret;
+	}
+
+	dps_err_t DPS::measurePressureOnce(float &result)
+	{
+		return measurePressureOnce(result, m_prsOsr);
+	}
+
 } // namespace dps
