@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name local_foot)(type KiCad)(uri ${KIPRJMOD}/local_foot.pretty)(options "")(descr ""))
+  (lib (name RC-Battery-Connectors)(type KiCad)(uri ${KIPRJMOD}/RC-Battery-Connectors.pretty)(options "")(descr ""))
+  (lib (name locallib)(type KiCad)(uri ${KIPRJMOD}/locallib.pretty)(options "")(descr ""))
+)
