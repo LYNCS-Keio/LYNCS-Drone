@@ -9,7 +9,7 @@
  * Main function.
  */
 #include <stdio.h>
-#include <I2Cbus.hpp>
+#include <MPU.hpp>
 
 
 extern "C" void app_main()
