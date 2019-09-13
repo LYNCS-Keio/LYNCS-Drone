@@ -24,7 +24,6 @@ namespace dps310
 		111 - 128 measurements pr. sec..
 	 */
 	uint8_t tmp_rate_;
-	uint8_t measure_tontrol_;
 	uint8_t m_tempSensor_;
   //compensation coefficients
   	float m_c0Half_;		//temperature coefficient value
@@ -56,7 +55,6 @@ namespace dps310
 		*/
 		void setTmpRate(bool rate){tmp_rate_ = rate;}
 		void setTmpOversamplingRate(int over_sampling_rate){tmp_over_sampling_rate_ = over_sampling_rate;}
-		void setMeasCtrl(uint8_t measure_tontrol){measure_tontrol_ =measure_tontrol;}
 		void initiarize();
 		esp_err_t temperature(float &T_comp);
 	};
