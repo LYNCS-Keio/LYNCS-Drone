@@ -18,7 +18,6 @@ namespace dps310
 {
 
     DPS310::DPS310(dps_bus_t *bus, int cs_pin_num) : DPS(bus),
-                                     tmp_ext_flag_(true),
                                      tmp_over_sampling_rate_(1)
     {
         

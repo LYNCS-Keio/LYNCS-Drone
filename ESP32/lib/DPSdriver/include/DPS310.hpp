@@ -10,7 +10,6 @@ namespace dps310
 	private:
 	esp_err_t flushFIFO();
 	esp_err_t readcoeffs();
-	bool tmp_ext_flag_;// used for TMP_EXT configuration. 0 - Internal sensor (in ASIC), 1 - External sensor (in pressure sensor MEMS element).
 	unsigned int tmp_over_sampling_rate_;
 	int tmp_scale_factor_;
 	uint8_t m_tempSensor_;
@@ -31,7 +30,6 @@ namespace dps310
 	public:
 		DPS310(dps_bus_t *bus, int cs_pin_num);
 		~DPS310(){};
-		void setTmpExt(bool flag){tmp_ext_flag_ = flag;}
 		void setTmpOversamplingRate(int over_sampling_rate){tmp_over_sampling_rate_ = over_sampling_rate;}
 		void initiarize();
 		esp_err_t temperature(float &T_comp);
