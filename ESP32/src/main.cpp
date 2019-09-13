@@ -43,7 +43,6 @@ extern "C" void app_main()
     dps310::DPS310 myDPS(&mySPI, CS_PIN);
     myDPS.dev_init(SPI_MODE,SPI_CLOCK,CS_PIN);
     myDPS.setTmpExt(false);
-    myDPS.setTmpRate(0x00);
     myDPS.setTmpOversamplingRate(1);
 
     myDPS.initiarize();
