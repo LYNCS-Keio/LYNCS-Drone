@@ -23,7 +23,7 @@
 #define MISO_PIN    19
 #define MOSI_PIN    23
 #define SCLK_PIN    18
-#define CS_PIN      5
+#define CS_PIN      14
 
 extern "C" void app_main()
 {
