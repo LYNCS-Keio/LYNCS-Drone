@@ -32,6 +32,5 @@ namespace dps310
 		~DPS310(){};
 		void setTmpOversamplingRate(int over_sampling_rate){tmp_over_sampling_rate_ = over_sampling_rate;}
 		void initiarize();
-		esp_err_t temperature(float &T_comp);
 	};
 } // namespace dps

@@ -128,14 +128,5 @@ namespace dps310
 	    //return pressure
 	    return prs;
     }
-    esp_err_t DPS310::temperature(float &T_comp)
-    {
-        float T = 0;
-        measureTempOnce(T);
-        printf("T = %f\n",T);
-        printf("c0 = %f\n",m_c0Half_);
-        printf("c1 = %d\n",m_c1_);
-        return err_;
-    }
 } // namespace dps
 
