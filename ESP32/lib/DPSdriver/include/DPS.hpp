@@ -74,6 +74,7 @@ namespace dps
         dps_err_t measureTempOnce(float &result);
         dps_err_t measurePressureOnce(float &result, uint8_t oversamplingRate);
         dps_err_t measurePressureOnce(float &result);
+        dps_err_t measureHeightOnce(float &result);
     };
     
     

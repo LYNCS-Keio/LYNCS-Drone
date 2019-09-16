@@ -1,9 +1,9 @@
 #pragma once
 #include "dps_register.hpp"
-
-#define NUM_OF_COMMON_REGMASKS 16
-
 ///////////     common    ///////////
+//sea level pressure
+#define DPS__SEA_LEVEL_PRESSURE 1000.1
+
 // slave address same for 422 and 310 (to be proved for future sensors)
 #define DPS__FIFO_SIZE 32
 #define DPS__STD_SLAVE_ADDRESS 0x77U
@@ -85,6 +85,8 @@ enum Config_Registers_e
     INT_FLAG_TEMP,
     INT_FLAG_PRS,
 };
+
+#define NUM_OF_COMMON_REGMASKS 16
 
 const RegMask_t config_registers[NUM_OF_COMMON_REGMASKS] = {
     {0x07, 0x70, 4}, // TEMP_MR
