@@ -203,6 +203,8 @@ namespace dps
 		}
 		//wait until measurement is finished
 		ets_delay_us(calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
+		//sampling interval must be over 10ms when using DPS310
+		ets_delay_us(10000U);
 
 		ret = getSingleResult(result);
 		if (ret != DPS__SUCCEEDED)
@@ -246,6 +248,8 @@ namespace dps
 		}
 		//wait until measurement is finished
 		ets_delay_us(calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
+		//sampling interval must be over 10ms when using DPS310
+		ets_delay_us(10000U);
 
 		ret = getSingleResult(result);
 		if (ret != DPS__SUCCEEDED)

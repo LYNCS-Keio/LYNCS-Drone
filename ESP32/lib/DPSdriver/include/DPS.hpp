@@ -38,10 +38,6 @@ namespace dps
         dps_err_t startMeasurePressureOnce();
         dps_err_t getRawResult(int32_t *raw, RegBlock_t reg);
         dps_err_t getSingleResult(float &result);
-        dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
-        dps_err_t measureTempOnce(float &result);
-        dps_err_t measurePressureOnce(float &result, uint8_t oversamplingRate);
-        dps_err_t measurePressureOnce(float &result);
         dps_err_t correctTemp();
         uint16_t calcBusyTime(uint16_t mr, uint16_t osr);
         virtual float calcTemp(int32_t raw) = 0;
@@ -74,6 +70,10 @@ namespace dps
             esp_err_t writeByteBitfield(uint8_t regAddr, uint8_t mask, uint8_t shift, uint8_t data);
             esp_err_t writeByteBitfield(RegMask_t regMask, uint8_t data);
         //! \}
+        dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
+        dps_err_t measureTempOnce(float &result);
+        dps_err_t measurePressureOnce(float &result, uint8_t oversamplingRate);
+        dps_err_t measurePressureOnce(float &result);
     };
     
     

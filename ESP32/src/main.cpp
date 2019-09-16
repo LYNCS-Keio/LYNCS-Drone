@@ -47,9 +47,12 @@ extern "C" void app_main()
     myDPS.initiarize();
     while (1)
     {
-        float T_comp;
-        myDPS.temperature(T_comp);
-        printf("%f\n",T_comp);
-        vTaskDelay(10 / portTICK_PERIOD_MS);
+        float T_comp=0;
+        myDPS.measureTempOnce(T_comp);
+        printf("T=%f\n",T_comp);
+        vTaskDelay(20 / portTICK_PERIOD_MS);
+        float P=0;
+        myDPS.measurePressureOnce(P);
+        printf("P=%f\n",P);
     }
 }
