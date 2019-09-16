@@ -432,17 +432,17 @@ Text Notes 8300 2600 2    50   ~ 0
 MISO
 Text Notes 8300 2450 2    50   ~ 0
 MOSI
-Text GLabel 8650 2400 0    50   Input ~ 0
+Text GLabel 8650 2550 0    50   Input ~ 0
 GPIO19
 Wire Wire Line
 	8650 2400 8950 2400
-Text GLabel 8650 2700 0    50   Input ~ 0
+Text GLabel 3750 3650 0    50   Input ~ 0
 GPIO21
 Text GLabel 8950 2700 2    50   Input ~ 0
 SCL
 Wire Wire Line
 	8950 2700 8650 2700
-Text GLabel 8650 2550 0    50   Input ~ 0
+Text GLabel 8650 2700 0    50   Input ~ 0
 GPIO18
 Text GLabel 8950 2850 2    50   Input ~ 0
 NCS
@@ -468,11 +468,11 @@ Text GLabel 6750 5900 2    50   Input ~ 0
 PI_GPIO8
 Text GLabel 9150 5100 2    50   Input ~ 0
 GPIO15
-Text GLabel 8650 1100 0    50   Input ~ 0
-GPIO14
 Text GLabel 8650 4500 0    50   Input ~ 0
-GPIO13
+GPIO14
 Text GLabel 8650 1200 0    50   Input ~ 0
+GPIO13
+Text GLabel 8650 1100 0    50   Input ~ 0
 GPIO12
 Text Notes 6000 3450 2    50   ~ 0
 uart RPI3 to ESP32
@@ -529,8 +529,6 @@ Text Notes 8300 4400 2    50   ~ 0
 CLK
 Text GLabel 8650 4350 0    50   Input ~ 0
 GPIO18
-Text GLabel 8650 4050 0    50   Input ~ 0
-GPIO19
 Text Notes 8300 4100 2    50   ~ 0
 MOSI
 Text Notes 8300 4250 2    50   ~ 0
@@ -604,8 +602,6 @@ Text GLabel 8650 5400 0    50   Input ~ 0
 PWM3
 Text GLabel 8650 5550 0    50   Input ~ 0
 PWM4
-Text GLabel 8650 4200 0    50   Input ~ 0
-GPIO21
 Wire Wire Line
 	9150 5100 8650 5100
 Wire Wire Line
@@ -813,8 +809,6 @@ Wire Wire Line
 	3700 4450 3900 4450
 Text Notes 3150 4150 0    50   ~ 0
 to ESC XT60 connector
-Text GLabel 3750 3650 0    50   Input ~ 0
-GPIO23
 Text Notes 9150 3650 2    50   ~ 0
 SPI master:ESP32 slave:DPS310\nusing vspi
 Text GLabel 6750 5500 2    50   Input ~ 0
@@ -875,4 +869,10 @@ F 3 "~" H 6300 5700 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 Connection ~ 6500 4800
+Text GLabel 8650 4050 0    50   Input ~ 0
+GPIO23
+Text GLabel 8650 2400 0    50   Input ~ 0
+GPIO23
+Text GLabel 8650 4200 0    50   Input ~ 0
+GPIO19
 $EndSCHEMATC

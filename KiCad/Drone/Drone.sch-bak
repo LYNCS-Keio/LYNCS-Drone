@@ -361,24 +361,12 @@ Wire Wire Line
 	8650 2250 8950 2250
 Text Notes 2300 1850 2    50   ~ 0
 11Vto5VReg
-$Comp
-L Connector_Generic:Conn_02x20_Odd_Even J4
-U 1 1 5D829EEE
-P 6200 5700
-F 0 "J4" H 6250 6817 50  0000 C CNN
-F 1 "Raspberry Pi" H 6250 6726 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_2x20_P2.54mm_Vertical" H 6200 5700 50  0001 C CNN
-F 3 "~" H 6200 5700 50  0001 C CNN
-	1    6200 5700
-	1    0    0    -1  
-$EndComp
 Text Notes 5850 4450 2    50   ~ 0
 Raspberry Pi 3
 Wire Wire Line
 	6500 4800 6500 4900
 Wire Wire Line
 	6500 4800 6750 4800
-Connection ~ 6500 4800
 Text GLabel 6750 4800 2    50   Input ~ 0
 5V
 Text GLabel 6750 5000 2    50   Input ~ 0
@@ -413,24 +401,16 @@ Wire Wire Line
 Connection ~ 6600 6200
 Wire Wire Line
 	6000 6700 5900 6700
-Wire Wire Line
-	5900 6700 5900 6000
 Connection ~ 5900 5200
 Wire Wire Line
 	5900 5200 6000 5200
 Wire Wire Line
 	5900 6000 6000 6000
 Connection ~ 5900 6000
-Wire Wire Line
-	5900 6000 5900 5200
-Wire Wire Line
-	6000 4800 5800 4800
 Text GLabel 5750 4800 0    50   Input ~ 0
 3V3
 Wire Wire Line
 	5800 4800 5800 5600
-Wire Wire Line
-	5800 5600 6000 5600
 Connection ~ 5800 4800
 Wire Wire Line
 	5800 4800 5750 4800
@@ -452,17 +432,17 @@ Text Notes 8300 2600 2    50   ~ 0
 MISO
 Text Notes 8300 2450 2    50   ~ 0
 MOSI
-Text GLabel 8650 2400 0    50   Input ~ 0
+Text GLabel 8650 2550 0    50   Input ~ 0
 GPIO19
 Wire Wire Line
 	8650 2400 8950 2400
-Text GLabel 8650 2700 0    50   Input ~ 0
+Text GLabel 3750 3650 0    50   Input ~ 0
 GPIO21
 Text GLabel 8950 2700 2    50   Input ~ 0
 SCL
 Wire Wire Line
 	8950 2700 8650 2700
-Text GLabel 8650 2550 0    50   Input ~ 0
+Text GLabel 8650 2700 0    50   Input ~ 0
 GPIO18
 Text GLabel 8950 2850 2    50   Input ~ 0
 NCS
@@ -476,8 +456,6 @@ Text Notes 8300 2900 2    50   ~ 0
 SS
 Text Notes 9150 2150 2    50   ~ 0
 SPI master:ESP32 slave:MPU9250\nusing vspi
-Wire Wire Line
-	6000 5700 5750 5700
 Text GLabel 5750 5700 0    50   Input ~ 0
 PI_GPIO10
 Text GLabel 5750 5800 0    50   Input ~ 0
@@ -485,18 +463,14 @@ PI_GPIO9
 Text GLabel 5750 5900 0    50   Input ~ 0
 PI_GPIO11
 Wire Wire Line
-	5750 5800 6000 5800
-Wire Wire Line
-	6000 5900 5750 5900
-Wire Wire Line
 	6500 5900 6750 5900
 Text GLabel 6750 5900 2    50   Input ~ 0
 PI_GPIO8
 Text GLabel 9150 5100 2    50   Input ~ 0
 GPIO15
-Text GLabel 8650 1100 0    50   Input ~ 0
-GPIO14
 Text GLabel 8650 4500 0    50   Input ~ 0
+GPIO14
+Text GLabel 8650 1100 0    50   Input ~ 0
 GPIO13
 Text GLabel 8650 1200 0    50   Input ~ 0
 GPIO12
@@ -555,8 +529,6 @@ Text Notes 8300 4400 2    50   ~ 0
 CLK
 Text GLabel 8650 4350 0    50   Input ~ 0
 GPIO18
-Text GLabel 8650 4050 0    50   Input ~ 0
-GPIO19
 Text Notes 8300 4100 2    50   ~ 0
 MOSI
 Text Notes 8300 4250 2    50   ~ 0
@@ -630,8 +602,6 @@ Text GLabel 8650 5400 0    50   Input ~ 0
 PWM3
 Text GLabel 8650 5550 0    50   Input ~ 0
 PWM4
-Text GLabel 8650 4200 0    50   Input ~ 0
-GPIO21
 Wire Wire Line
 	9150 5100 8650 5100
 Wire Wire Line
@@ -839,8 +809,6 @@ Wire Wire Line
 	3700 4450 3900 4450
 Text Notes 3150 4150 0    50   ~ 0
 to ESC XT60 connector
-Text GLabel 3750 3650 0    50   Input ~ 0
-GPIO23
 Text Notes 9150 3650 2    50   ~ 0
 SPI master:ESP32 slave:DPS310\nusing vspi
 Text GLabel 6750 5500 2    50   Input ~ 0
@@ -875,4 +843,36 @@ Text GLabel 6400 3700 2    50   Input ~ 0
 RX
 Text GLabel 6400 3800 2    50   Input ~ 0
 TX
+Wire Wire Line
+	5900 6700 5900 6000
+Wire Wire Line
+	6000 5900 5750 5900
+Wire Wire Line
+	5750 5800 6000 5800
+Wire Wire Line
+	6000 5700 5750 5700
+Wire Wire Line
+	6000 4800 5800 4800
+Wire Wire Line
+	5800 5600 6000 5600
+Wire Wire Line
+	5900 6000 5900 5200
+$Comp
+L Connector_Generic:Conn_02x20_Odd_Even J4
+U 1 1 5D829EEE
+P 6300 5700
+F 0 "J4" H 6350 6817 50  0000 C CNN
+F 1 "Raspberry Pi" H 6350 6726 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x20_P2.54mm_Vertical" H 6300 5700 50  0001 C CNN
+F 3 "~" H 6300 5700 50  0001 C CNN
+	1    6300 5700
+	-1   0    0    -1  
+$EndComp
+Connection ~ 6500 4800
+Text GLabel 8650 4050 0    50   Input ~ 0
+GPIO23
+Text GLabel 8650 2400 0    50   Input ~ 0
+GPIO23
+Text GLabel 8650 4200 0    50   Input ~ 0
+GPIO19
 $EndSCHEMATC
