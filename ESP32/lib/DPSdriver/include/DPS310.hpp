@@ -11,7 +11,6 @@ namespace dps310
 	esp_err_t flushFIFO();
 	esp_err_t readcoeffs();
 	unsigned int tmp_over_sampling_rate_;
-	int tmp_scale_factor_;
 	uint8_t m_tempSensor_;
   //compensation coefficients
   	float m_c0Half_;		//temperature coefficient value
