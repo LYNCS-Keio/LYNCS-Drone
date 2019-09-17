@@ -1,9 +1,10 @@
 # LYNCS-Drone
 
 ## Todo
-- [ ] ESP32でSPI(ESP32がslave)を使えるようにする
+- [ ] ESP32とRaspberry Pi 3間でUARTを使えるようにする
 - [x] ESP32でSPI(ESP32がmaster)を使えるようにする
-- [ ] ICM20948から姿勢を取得する
+- [ ] MPU9255から姿勢を取得する
+- [x] DPS310から温度・気圧を取得する
 - [ ] DPS310から高度を取得する
 - [ ] 制御する
 
