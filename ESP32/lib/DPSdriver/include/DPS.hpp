@@ -99,7 +99,8 @@ namespace dps
     {
         return err_ = bus_->readBytes(addr_, regAddr, length, data);
     }
-    inline esp_err_t DPS::readByteBitfield(RegMask_t regMask, uint8_t* data){
+    inline esp_err_t DPS::readByteBitfield(RegMask_t regMask, uint8_t* data)
+    {
         readByte(regMask.regAddress,data);
         *data = ((*data) & regMask.mask) >> regMask.shift;
         return err_;
