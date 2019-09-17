@@ -78,23 +78,28 @@ namespace dps310
     {
         //acqire raw coefficient value
         if(DPS_ERR_CHECK(readBlock(coeffBlock, buffer_)))return err_;
+        
         uint32_t calib0 = (((uint32_t)(buffer_[0]) << 4)) | (((uint32_t)(buffer_[1]) >> 4) & 0x0F);
         m_c0Half_ = convert_complement<uint32_t,12>(calib0)/2U;
+        
         uint32_t calib1 = (((uint32_t)buffer_[1] & 0x0F) << 8) | (uint32_t)(buffer_[2]);
         m_c1_ = convert_complement<uint32_t,12>(calib1);
-        uint32_t calib00 = (((uint32_t)buffer_[3]) << 12) | ((uint32_t)(buffer_[4]) << 4) | ((buffer_[5] >> 4) & 0x0F);
+
+        uint32_t calib00 = (((uint32_t)buffer_[3]) << 12) | ((uint32_t)(buffer_[4]) << 4) | (((uint32_t)(buffer_[5]) >> 4) & 0x0F);
         m_c00_ = convert_complement<uint32_t,20>(calib00);
-        uint32_t calib10 = (((uint32_t)buffer_[5] & 0x0F) << 16) | ((uint32_t)(buffer_[6]) << 8) | buffer_[7];
-        m_c10_ = convert_complement<uint32_t,16>(calib10);
-        uint32_t calib01 = (((uint32_t)buffer_[8] & 0x0F) << 8) | (uint32_t)(buffer_[9]);
+        uint32_t calib10 = (((uint32_t)buffer_[5] & 0x0F) << 16) | ((uint32_t)(buffer_[6]) << 8) | (uint32_t)(buffer_[7]);
+        m_c10_ = convert_complement<uint32_t,20>(calib10);
+        
+        uint32_t calib01 = ((uint32_t)(buffer_[8]) << 8) | (uint32_t)(buffer_[9]);
         m_c01_ = convert_complement<uint32_t,16>(calib01);
-        uint32_t calib11 = (((uint32_t)buffer_[10] & 0x0F) << 8) | (uint32_t)(buffer_[11]);
+        
+        uint32_t calib11 = ((uint32_t)(buffer_[10]) << 8) | (uint32_t)(buffer_[11]);
         m_c11_ = convert_complement<uint32_t,16>(calib11);
-        uint32_t calib20 = (((uint32_t)buffer_[12] & 0x0F) << 8) | (uint32_t)(buffer_[13]);
+        uint32_t calib20 = ((uint32_t)(buffer_[12]) << 8) | (uint32_t)(buffer_[13]);
         m_c20_ = convert_complement<uint32_t,16>(calib20);
-        uint32_t calib21 = (((uint32_t)buffer_[14] & 0x0F) << 8) | (uint32_t)(buffer_[15]);
+        uint32_t calib21 = ((uint32_t)(buffer_[14]) << 8) | (uint32_t)(buffer_[15]);
         m_c21_ = convert_complement<uint32_t,16>(calib21);
-        uint32_t calib30 = (((uint32_t)buffer_[16] & 0x0F) << 8) | (uint32_t)(buffer_[17]);
+        uint32_t calib30 = ((uint32_t)(buffer_[16]) << 8) | (uint32_t)(buffer_[17]);
         m_c30_ = convert_complement<uint32_t,16>(calib30);
         return err_;
     }
