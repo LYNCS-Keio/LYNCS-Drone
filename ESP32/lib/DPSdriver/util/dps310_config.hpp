@@ -3,6 +3,7 @@
 #define DPS310_NUM_OF_REGMASKS 16
 #define DPS310__SPI_RW_MASK 0x80U
 #define DPS310__BUSYTIME_FAILSAFE 10U
+#define DPS310__OSR_SE 3U
 
 namespace dps310
 {
