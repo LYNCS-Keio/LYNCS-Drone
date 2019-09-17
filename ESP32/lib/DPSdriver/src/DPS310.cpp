@@ -84,6 +84,7 @@ namespace dps310
         // Fix IC with a fuse bit problem, which lead to a wrong temperature
 	    // Should not affect ICs without this problem
 	    correctTemp();
+        m_initFail = 0U;
         return DPS__SUCCEEDED;
 	}
     dps_err_t DPS310::configTemp(uint8_t tempMr, uint8_t tempOsr)
