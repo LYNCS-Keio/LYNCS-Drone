@@ -87,20 +87,14 @@ return data;
 };
 
 ////////spiWrite////////////////////////////////////////
-void SpiWrite(uint16_t data) {
-  for (int i=7; i>=0; i--) {
-    digitalWrite(SCLK, LOW);
-    digitalWrite(MOSI, data & (1<<i));
-    digitalWrite(SCLK, HIGH);
-  };
-};
-
-void SpiWriteReg(uint8_t reg_address, uint8_t data) {
+void wry(uint8_t reg,uint8_t data){
   digitalWrite(CS, LOW);
-  SpiWrite(((reg_address & B01111111) << 8) | data); // write, bit 7 low
+  SPI.transfer(reg);
+  delay(5);
+  SPI.transfer(data); // write, bit 7 low
+  delay(5);
   digitalWrite(CS, HIGH);
 };
-
 ////////spiStore///////////////////////////////////////
 void spiStore(uint8_t reg,uint8_t Nbytes,uint8_t* data){
   digitalWrite(CS, LOW);
@@ -108,22 +102,6 @@ void spiStore(uint8_t reg,uint8_t Nbytes,uint8_t* data){
     for(int i=0;i<Nbytes;i++)
     {data[i] = SPI.transfer(0xff);}
   digitalWrite(CS, HIGH);
-
-};
-//////swap BigEndian to LittleEndian/////////////////////////
-
-uint16_t swap16(uint16_t data){
-uint16_t data_swapped = 0;
-data_swapped = ( ((data & 0x00ff)<<8) | ( (data & 0xff00)>>8) );
-
-return data_swapped;
-};
-
-//////unsigned to signed///////////////////////////////////////////
-int16_t u2s(uint16_t udata){
-  int16_t sdata = 0;
-  sdata = -1 * ((udata ^ 0xffff) +1);
-  return sdata;
 };
 
 //////////////MPU9250////////////////////////////////////////////
@@ -133,17 +111,11 @@ void MPU9250(){
   //Acc
     ax = (accGyroTempData[0] << 8) | accGyroTempData[1];//shift accGyroTempData[i] << 8，add(|) accGyroTempData[1] (Low byte of the data)
     ay = (accGyroTempData[2] << 8) | accGyroTempData[3];
-    az = u2s((accGyroTempData[4] << 8)| accGyroTempData[5]);
+    az = (accGyroTempData[4] << 8) | accGyroTempData[5];
   //Gyro
     gx = (accGyroTempData[8] << 8) | accGyroTempData[9];
     gy = (accGyroTempData[10] << 8) | accGyroTempData[11];
     gz = (accGyroTempData[12] << 8) | accGyroTempData[13];
-  //Magnetic
-  /*
-    mx = (magneticData[3] << 8) | magneticData[2];
-    my = (magneticData[1] << 8) | magneticData[0];
-    mz = -((magneticData[5] << 8) | magneticData[4]);//加速度，ジャイロセンサと軸の向きが逆
-    */
   //Temp
     tempMPU9250Raw = (int16_t)((accGyroTempData[6] << 8) | accGyroTempData[7]);
   //calculate accel
@@ -158,17 +130,18 @@ void MPU9250(){
 
   //calculate temp
     tempMPU9250 = (tempMPU9250Raw - 0.0) / 333.87 + 21.0f;
-  //calculate magnetic
-  /*
-    magX = mx / 32768.0f * 4800.0f;//[uT]に変換
-    magY = my / 32768.0f * 4800.0f;//[uT]に変換
-    magZ = mz / 32768.0f * 4800.0f;//[uT]に変換
-  */
+
   delay(10);
 };
 
 ////////setup/////////////////////////////////////////////////////
 void setup(){
+  pinMode(CS, OUTPUT);
+  pinMode(MOSI,OUTPUT);
+  pinMode(MISO,INPUT);
+  pinMode(SCLK,OUTPUT);
+
+  digitalWrite(CS,HIGH);
   Serial.begin(9600);
   SPI.begin();
 
@@ -176,21 +149,19 @@ void setup(){
   SPI.setBitOrder(MSBFIRST);
   SPI.setDataMode(SPI_MODE3);
 
-  SpiWriteReg(PWR_MGMT_1,0x00);
-  SpiWriteReg(ACCEL_CONFIG,ACCEL_FS_SEL_16G);
+  wry(PWR_MGMT_1,0x00);
+  wry(ACCEL_CONFIG,ACCEL_FS_SEL_16G);
   accRange = 16.0;
-  SpiWriteReg(GYRO_CONFIG, GYRO_FS_SEL_2000DPS);
+  wry(GYRO_CONFIG, GYRO_FS_SEL_2000DPS);
+  uint8_t j,k;
+  j=spiRead(ACCEL_CONFIG);
+  k=spiRead(GYRO_CONFIG);
+  Serial.print(j);
+  Serial.print(k);
   gyroRange = 2000;
-  SpiWriteReg(INT_PIN_CFG,0x02);
-  SpiWriteReg(CNTL1,CNTL1_MODE_SEL_100HZ);
+  wry(INT_PIN_CFG,0x02);
+  wry(CNTL1,CNTL1_MODE_SEL_100HZ);
 
-  pinMode(CS, OUTPUT);
-  pinMode(MOSI,OUTPUT);
-  pinMode(MISO,INPUT);
-  pinMode(SCLK,OUTPUT);
-
-  digitalWrite(CS,HIGH);
-  //MeasureOffsetAcc();
 };
 ////////loop////////////////////////////////////////////////////////
 void loop(){
@@ -218,18 +189,6 @@ void loop(){
   Serial.print("temp: ");
   Serial.print(tempMPU9250);
 
-  /*
-  Serial.println("\t");
-  Serial.print("mx: ");
-  Serial.print(magX);
-  Serial.print("\t");
-  Serial.print("my: ");
-  Serial.print(magY);
-  Serial.print("\t");
-  Serial.print("mz: ");
-  Serial.print(magZ);
-  Serial.print("\t");
-  */
 delay(500);
 
 };
