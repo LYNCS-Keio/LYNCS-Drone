@@ -24,7 +24,7 @@ namespace dps310
         
     }
     esp_err_t DPS310::flushFIFO(){
-        writeByteBitfield(registers[FIFO_EN],1U);
+        writeByteBitfield(registers[FIFO_FL],1U);
         return err_;
     }
     dps_err_t DPS310::initiarize(){
