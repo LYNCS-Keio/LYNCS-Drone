@@ -264,21 +264,4 @@ namespace dps
 	{
 		return measurePressureOnce(result, m_prsOsr);
 	}
-
-    dps_err_t DPS::measureHeightOnce(float &result)
-	{
-		float T, P;
-		dps_err_t ret = measureTempOnce(T);
-		if (ret != DPS__SUCCEEDED)
-		{
-			return ret;
-		}
-		ret = measurePressureOnce(P);
-		if (ret != DPS__SUCCEEDED)
-		{
-			return ret;
-		}
-		result = (std::pow((DPS__SEA_LEVEL_PRESSURE/(P/100)),(1.0/5.257)) - 1)*(T + 273.15)/0.0065;
-		return ret;
-	}
 } // namespace dps

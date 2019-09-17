@@ -16,6 +16,7 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_err.h"
+#include "math.h"
 
 #define SPI_CLOCK   10000000  // 10 MHz
 #define SPI_MODE    3
@@ -43,19 +44,18 @@ extern "C" void app_main()
     dps310::DPS310 myDPS(&mySPI, CS_PIN);
     myDPS.dev_init(SPI_MODE,SPI_CLOCK,CS_PIN);
     myDPS.setTmpOversamplingRate(1);
+    myDPS.setPrsOversamplingRate(1);
 
-    myDPS.initiarize();
+    dps::dps_err_t ret = myDPS.initiarize();
+    printf("ret=%d\n",ret);
+    if (ret != dps::DPS__SUCCEEDED)
+    {
+        return;
+    }
+    
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     while (1)
     {
-        float T_comp=0;
-        myDPS.measureTempOnce(T_comp);
-        printf("T=%f\n",T_comp);
-        float P=0;
-        myDPS.measurePressureOnce(P);
-        printf("P=%f\n",P);
-        float H = 0;
-        myDPS.measureHeightOnce(H);
-        printf("H=%f\n",H);
-        vTaskDelay(20 / portTICK_PERIOD_MS);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
