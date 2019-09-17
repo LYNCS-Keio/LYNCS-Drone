@@ -77,7 +77,36 @@ namespace dps310
 	    correctTemp();
         return DPS__SUCCEEDED;
 	}
+    dps_err_t DPS310::configTemp(uint8_t tempMr, uint8_t tempOsr)
+    {
+        dps_err_t ret = DPS::configTemp(tempMr, tempOsr);
 
+        if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR], m_tempSensor_)))return DPS__FAIL_UNKNOWN;
+        //set TEMP SHIFT ENABLE if oversampling rate higher than eight(2^3)
+        if (tempOsr > DPS310__OSR_SE)
+        {
+		    if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SE], 1U)))return DPS__FAIL_UNKNOWN;
+        }
+    	else
+	    {
+            if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SE], 0U)))return DPS__FAIL_UNKNOWN;
+	    }
+	    return ret;
+}
+    dps_err_t DPS310::configPressure(uint8_t prsMr, uint8_t prsOsr)
+    {
+        dps_err_t ret = DPS::configPressure(prsMr, prsOsr);
+        //set PM SHIFT ENABLE if oversampling rate higher than eight(2^3)
+    	if (prsOsr > DPS310__OSR_SE)
+    	{
+            if (DPS_ERR_CHECK(writeByteBitfield(registers[PRS_SE], 1U)))return DPS__FAIL_UNKNOWN;
+    	}
+    	else
+    	{
+            if (DPS_ERR_CHECK(writeByteBitfield(registers[PRS_SE], 0U)))return DPS__FAIL_UNKNOWN;
+    	}
+    	return ret;
+    }
     esp_err_t DPS310::readcoeffs()
     {
         //acqire raw coefficient value

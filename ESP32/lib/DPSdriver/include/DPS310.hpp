@@ -26,6 +26,8 @@ namespace dps310
 	float m_lastTempScal_;	//it will be used for pressure compensation
 	float calcTemp(int32_t raw);
 	float calcPressure(int32_t raw);
+	dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr);
+	dps_err_t configPressure(uint8_t prsMr, uint8_t prsOsr);
 	protected:
 	public:
 		DPS310(dps_bus_t *bus, int cs_pin_num);
