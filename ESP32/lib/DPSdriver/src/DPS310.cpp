@@ -62,8 +62,17 @@ namespace dps310
         //set to standby for further configuration
 	    standby();
 	    //set measurement precision and rate to standard values;
-	    configTemp(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
-	    configPressure(DPS__MEASUREMENT_RATE_4, prs_over_sampling_rate_);
+        if (configTemp(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_) != DPS__SUCCEEDED)
+        {
+	    	m_initFail = 1U;
+            return DPS__FAIL_INIT_FAILED;
+        }
+        if (configPressure(DPS__MEASUREMENT_RATE_4, prs_over_sampling_rate_) != DPS__SUCCEEDED)
+        {
+	    	m_initFail = 1U;
+            return DPS__FAIL_INIT_FAILED;
+        }
+        
         //perform a first temperature measurement
 	    //the most recent temperature will be saved internally
 	    //and used for compensation when calculating pressure
