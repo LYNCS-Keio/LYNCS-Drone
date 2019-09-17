@@ -27,35 +27,37 @@ namespace dps310
         writeByteBitfield(registers[FIFO_EN],1U);
         return err_;
     }
-    void DPS310::initiarize(){
+    dps_err_t DPS310::initiarize(){
         
         if (DPS_ERR_CHECK(readByteBitfield(registers[PROD_ID], &m_productID)))
         {
             m_initFail = 1U;
-            return;
+            return DPS__FAIL_INIT_FAILED;
         }
         if (DPS_ERR_CHECK(readByteBitfield(registers[REV_ID], &m_revisionID)))
         {
             m_initFail = 1U;
-            return;
+            return DPS__FAIL_INIT_FAILED;
         }
         //find out which temperature sensor is calibrated with coefficients...
 	    if (DPS_ERR_CHECK(readByteBitfield(registers[TEMP_SENSORREC], &m_tempSensor_)))
         {
             m_initFail = 1U;
-            return;
+            return DPS__FAIL_INIT_FAILED;
         }
+
         //...and use this sensor for temperature measurement
         if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor_)))
         {
 		    m_initFail = 1U;
-		    return;
+            return DPS__FAIL_INIT_FAILED;
         }
+
         //read coefficients
 	    if (DPS_ERR_CHECK(readcoeffs()))
 	    {
 	    	m_initFail = 1U;
-	    	return;
+            return DPS__FAIL_INIT_FAILED;
 	    }
         //set to standby for further configuration
 	    standby();
@@ -73,6 +75,7 @@ namespace dps310
         // Fix IC with a fuse bit problem, which lead to a wrong temperature
 	    // Should not affect ICs without this problem
 	    correctTemp();
+        return DPS__SUCCEEDED;
 	}
 
     esp_err_t DPS310::readcoeffs()

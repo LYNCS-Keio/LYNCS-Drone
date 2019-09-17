@@ -32,5 +32,6 @@ namespace dps310
 		~DPS310(){};
 		void setTmpOversamplingRate(uint8_t over_sampling_rate){tmp_over_sampling_rate_ = over_sampling_rate;}
 		void setPrsOversamplingRate(uint8_t over_sampling_rate){prs_over_sampling_rate_ = over_sampling_rate;}
+		dps_err_t initiarize();
 	};
 } // namespace dps
