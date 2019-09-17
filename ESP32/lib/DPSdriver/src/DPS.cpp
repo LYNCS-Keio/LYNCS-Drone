@@ -278,7 +278,7 @@ namespace dps
 		{
 			return ret;
 		}
-		result = (std::pow(((P/100) / DPS__SEA_LEVEL_PRESSURE),(1.0/5.257)) - 1)*(T + 273.15)/0.0065;
+		result = (std::pow((DPS__SEA_LEVEL_PRESSURE/(P/100)),(1.0/5.257)) - 1)*(T + 273.15)/0.0065;
 		return ret;
 	}
 } // namespace dps
