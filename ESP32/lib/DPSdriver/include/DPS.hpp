@@ -3,6 +3,19 @@
 #include "SPIbus.hpp"
 #include "../util/dps_register.hpp"
 #include "../util/dps_const.hpp"
+#include <math.h>
+
+static float calc_height_sub(float P)
+{
+    float P_hP = P/100.0;
+    const float k_const = 1.0/5.257;
+    if (P_hP != 0)
+    {
+        float H_raw = pow(DPS__SEA_LEVEL_PRESSURE/P_hP,k_const);
+        return H_raw;
+    }
+    return 0;
+}
 
 #define DPS_ERR_CHECK(x) (x)
 namespace dps
@@ -75,7 +88,6 @@ namespace dps
         dps_err_t measureTempOnce(float &result);
         dps_err_t measurePressureOnce(float &result, uint8_t oversamplingRate);
         dps_err_t measurePressureOnce(float &result);
-        dps_err_t measureHeightOnce(float &result);
     };
     
     
