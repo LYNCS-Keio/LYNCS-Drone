@@ -18,7 +18,8 @@ namespace dps310
 {
 
     DPS310::DPS310(dps_bus_t *bus, int cs_pin_num) : DPS(bus),
-                                     tmp_over_sampling_rate_(1)
+    tmp_over_sampling_rate_(1),
+    prs_over_sampling_rate_(1)
     {
         
     }
@@ -60,7 +61,7 @@ namespace dps310
 	    standby();
 	    //set measurement precision and rate to standard values;
 	    configTemp(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
-	    configPressure(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_);
+	    configPressure(DPS__MEASUREMENT_RATE_4, prs_over_sampling_rate_);
         //perform a first temperature measurement
 	    //the most recent temperature will be saved internally
 	    //and used for compensation when calculating pressure

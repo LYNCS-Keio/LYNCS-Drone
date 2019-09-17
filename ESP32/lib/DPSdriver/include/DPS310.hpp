@@ -10,7 +10,8 @@ namespace dps310
 	private:
 	esp_err_t flushFIFO();
 	esp_err_t readcoeffs();
-	unsigned int tmp_over_sampling_rate_;
+	uint8_t tmp_over_sampling_rate_;
+	uint8_t prs_over_sampling_rate_;
 	uint8_t m_tempSensor_;
   //compensation coefficients
   	float m_c0Half_;		//temperature coefficient value
@@ -29,7 +30,7 @@ namespace dps310
 	public:
 		DPS310(dps_bus_t *bus, int cs_pin_num);
 		~DPS310(){};
-		void setTmpOversamplingRate(int over_sampling_rate){tmp_over_sampling_rate_ = over_sampling_rate;}
-		void initiarize();
+		void setTmpOversamplingRate(uint8_t over_sampling_rate){tmp_over_sampling_rate_ = over_sampling_rate;}
+		void setPrsOversamplingRate(uint8_t over_sampling_rate){prs_over_sampling_rate_ = over_sampling_rate;}
 	};
 } // namespace dps
