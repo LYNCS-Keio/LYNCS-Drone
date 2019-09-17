@@ -8,8 +8,6 @@ namespace dps310
 	class DPS310 : public DPS
 	{
 	private:
-	esp_err_t flushFIFO();
-	esp_err_t readcoeffs();
 	uint8_t tmp_over_sampling_rate_;
 	uint8_t prs_over_sampling_rate_;
 	uint8_t m_tempSensor_;
@@ -26,8 +24,11 @@ namespace dps310
 	float m_lastTempScal_;	//it will be used for pressure compensation
 	float calcTemp(int32_t raw);
 	float calcPressure(int32_t raw);
-	dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr);
-	dps_err_t configPressure(uint8_t prsMr, uint8_t prsOsr);
+	//implement virtual functions
+	esp_err_t flushFIFO() override;
+	esp_err_t readcoeffs() override;
+	dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr) override;
+	dps_err_t configPressure(uint8_t prsMr, uint8_t prsOsr) override;
 	protected:
 	public:
 		DPS310(dps_bus_t *bus, int cs_pin_num);
