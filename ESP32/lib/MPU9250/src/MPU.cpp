@@ -90,6 +90,7 @@ return data;
 void wry(uint8_t reg,uint8_t data){
   digitalWrite(CS, LOW);
   SPI.transfer(reg & B01111111);
+  delay(5);
   SPI.transfer(data); // write, bit 7 low
   digitalWrite(CS, HIGH);
 };
