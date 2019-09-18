@@ -89,10 +89,8 @@ return data;
 ////////spiWrite////////////////////////////////////////
 void wry(uint8_t reg,uint8_t data){
   digitalWrite(CS, LOW);
-  SPI.transfer(reg);
-  delay(5);
+  SPI.transfer(reg & B01111111);
   SPI.transfer(data); // write, bit 7 low
-  delay(5);
   digitalWrite(CS, HIGH);
 };
 ////////spiStore///////////////////////////////////////
@@ -142,22 +140,25 @@ void setup(){
   pinMode(SCLK,OUTPUT);
 
   digitalWrite(CS,HIGH);
-  Serial.begin(9600);
+  Serial.begin(115200);
   SPI.begin();
 
+  delay(35);
   SPI.setClockDivider(SPI_CLOCK_DIV16);
   SPI.setBitOrder(MSBFIRST);
   SPI.setDataMode(SPI_MODE3);
 
   wry(PWR_MGMT_1,0x00);
-  wry(ACCEL_CONFIG,ACCEL_FS_SEL_16G);
+  wry(0x1a,0x00);
+  wry(GYRO_CONFIG, 0x18);
+  wry(ACCEL_CONFIG,0x18);
+  gyroRange = 2000;
   accRange = 16.0;
-  wry(GYRO_CONFIG, GYRO_FS_SEL_2000DPS);
   uint8_t j,k;
   j=spiRead(ACCEL_CONFIG);
   k=spiRead(GYRO_CONFIG);
-  Serial.print(j);
   Serial.print(k);
+  Serial.print(j);
   gyroRange = 2000;
   wry(INT_PIN_CFG,0x02);
   wry(CNTL1,CNTL1_MODE_SEL_100HZ);
@@ -167,28 +168,27 @@ void setup(){
 void loop(){
   MPU9250();
 
-  Serial.println(spiRead(0x75),HEX);//who am i
   Serial.print("ax: ");
-  Serial.print(accX);
+  Serial.print(accX,4);
   Serial.print("\t");
   Serial.print("ay: ");
-  Serial.print(accY);
+  Serial.print(accY,4);
   Serial.print("\t");
   Serial.print("az: ");
-  Serial.print(accZ);
+  Serial.print(accZ,4);
   Serial.print("\t");
   Serial.print("gx: ");
-  Serial.print(gyroX);
+  Serial.print(gyroX,4);
   Serial.print("\t");
   Serial.print("gy: ");
-  Serial.print(gyroY);
+  Serial.print(gyroY,4);
   Serial.print("\t");
   Serial.print("gz: ");
-  Serial.print(gyroZ);
+  Serial.print(gyroZ,4);
   Serial.print("\t");
   Serial.print("temp: ");
-  Serial.print(tempMPU9250);
+  Serial.println(tempMPU9250,4);
 
-delay(500);
+delay(5);
 
 };
