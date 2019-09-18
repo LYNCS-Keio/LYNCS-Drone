@@ -36,21 +36,4 @@ extern "C" void app_main()
         sleep(1);
     }
 
-    /* 
-    mcpwm_config_t conf;
-    conf.frequency = 50;
-    conf.cmpr_a = 0;
-    conf.cmpr_b = 0;
-    conf.duty_mode = MCPWM_DUTY_MODE_0;
-    conf.counter_mode = MCPWM_UP_COUNTER;
-    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, 14);
-    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &conf);
-    
-    while (1) {
-        mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1000);
-        sleep(1);
-        mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 2000);
-        sleep(1);
-
-    } */
 }
