@@ -23,41 +23,44 @@ namespace dps310
     {
         
     }
-    esp_err_t DPS310::flushFIFO(){
-        writeByteBitfield(registers[FIFO_FL],1U);
-        return err_;
+    dps_err_t DPS310::flushFIFO(){
+        return writeByteBitfield(registers[FIFO_FL],1U);
     }
     dps_err_t DPS310::initiarize(){
-        
-        if (DPS_ERR_CHECK(readByteBitfield(registers[PROD_ID], &m_productID)))
+        dps_err_t ret = readByteBitfield(registers[PROD_ID], &m_productID);
+        if (ret != DPS__SUCCEEDED)
         {
             m_initFail = 1U;
-            return DPS__FAIL_INIT_FAILED;
+            return ret;
         }
-        if (DPS_ERR_CHECK(readByteBitfield(registers[REV_ID], &m_revisionID)))
+        ret = readByteBitfield(registers[REV_ID], &m_revisionID);
+        if (ret != DPS__SUCCEEDED)
         {
             m_initFail = 1U;
-            return DPS__FAIL_INIT_FAILED;
+            return ret;
         }
         //find out which temperature sensor is calibrated with coefficients...
-	    if (DPS_ERR_CHECK(readByteBitfield(registers[TEMP_SENSORREC], &m_tempSensor_)))
+        ret = readByteBitfield(registers[TEMP_SENSORREC], &m_tempSensor_);
+	    if (ret != DPS__SUCCEEDED)
         {
             m_initFail = 1U;
-            return DPS__FAIL_INIT_FAILED;
+            return ret;
         }
 
         //...and use this sensor for temperature measurement
-        if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor_)))
+        ret = writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor_);
+        if (ret != DPS__SUCCEEDED)
         {
 		    m_initFail = 1U;
-            return DPS__FAIL_INIT_FAILED;
+            return ret;
         }
 
         //read coefficients
-	    if (DPS_ERR_CHECK(readcoeffs()))
+        ret = readcoeffs();
+	    if (ret != DPS__SUCCEEDED)
 	    {
 	    	m_initFail = 1U;
-            return DPS__FAIL_INIT_FAILED;
+            return ret;
 	    }
         //set to standby for further configuration
 	    standby();
@@ -90,37 +93,45 @@ namespace dps310
     dps_err_t DPS310::configTemp(uint8_t tempMr, uint8_t tempOsr)
     {
         dps_err_t ret = DPS::configTemp(tempMr, tempOsr);
-
-        if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SENSOR], m_tempSensor_)))return DPS__FAIL_UNKNOWN;
+        if (ret != DPS__SUCCEEDED)return ret;
+        
+        ret = writeByteBitfield(registers[TEMP_SENSOR], m_tempSensor_);
+        if (ret != DPS__SUCCEEDED)return ret;
         //set TEMP SHIFT ENABLE if oversampling rate higher than eight(2^3)
         if (tempOsr > DPS310__OSR_SE)
         {
-		    if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SE], 1U)))return DPS__FAIL_UNKNOWN;
+            ret = writeByteBitfield(registers[TEMP_SE], 1U);
+		    if (ret != DPS__SUCCEEDED)return ret;
         }
     	else
 	    {
-            if (DPS_ERR_CHECK(writeByteBitfield(registers[TEMP_SE], 0U)))return DPS__FAIL_UNKNOWN;
+            ret = writeByteBitfield(registers[TEMP_SE], 0U);
+            if (ret != DPS__SUCCEEDED)return ret;
 	    }
 	    return ret;
 }
     dps_err_t DPS310::configPressure(uint8_t prsMr, uint8_t prsOsr)
     {
         dps_err_t ret = DPS::configPressure(prsMr, prsOsr);
+        if (ret != DPS__SUCCEEDED)return ret;
         //set PM SHIFT ENABLE if oversampling rate higher than eight(2^3)
     	if (prsOsr > DPS310__OSR_SE)
     	{
-            if (DPS_ERR_CHECK(writeByteBitfield(registers[PRS_SE], 1U)))return DPS__FAIL_UNKNOWN;
+            ret = writeByteBitfield(registers[PRS_SE], 1U);
+            if (ret != DPS__SUCCEEDED)return ret;
     	}
     	else
     	{
-            if (DPS_ERR_CHECK(writeByteBitfield(registers[PRS_SE], 0U)))return DPS__FAIL_UNKNOWN;
+            ret = writeByteBitfield(registers[PRS_SE], 0U);
+            if (ret != DPS__SUCCEEDED)return ret;
     	}
     	return ret;
     }
-    esp_err_t DPS310::readcoeffs()
+    dps_err_t DPS310::readcoeffs()
     {
         //acqire raw coefficient value
-        if(DPS_ERR_CHECK(readBlock(coeffBlock, buffer_)))return err_;
+        dps_err_t ret = readBlock(coeffBlock, buffer_);
+        if(ret != DPS__SUCCEEDED)return ret;
         
         uint32_t calib0 = (((uint32_t)(buffer_[0]) << 4)) | (((uint32_t)(buffer_[1]) >> 4) & 0x0F);
         m_c0Half_ = convert_complement<uint32_t,12>(calib0)/2U;
@@ -144,7 +155,7 @@ namespace dps310
         m_c21_ = convert_complement<uint32_t,16>(calib21);
         uint32_t calib30 = ((uint32_t)(buffer_[16]) << 8) | (uint32_t)(buffer_[17]);
         m_c30_ = convert_complement<uint32_t,16>(calib30);
-        return err_;
+        return ret;
     }
     float DPS310::calcTemp(int32_t raw)
     {

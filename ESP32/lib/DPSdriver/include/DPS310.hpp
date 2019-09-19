@@ -25,8 +25,8 @@ namespace dps310
 	float calcTemp(int32_t raw);
 	float calcPressure(int32_t raw);
 	//implement virtual functions
-	esp_err_t flushFIFO() override;
-	esp_err_t readcoeffs() override;
+	dps_err_t flushFIFO() override;
+	dps_err_t readcoeffs() override;
 	dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr) override;
 	dps_err_t configPressure(uint8_t prsMr, uint8_t prsOsr) override;
 	protected:

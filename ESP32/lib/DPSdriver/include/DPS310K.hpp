@@ -32,3 +32,7 @@
 #define REG_PRODUCT_ID          0x0D
 #define REG_COEF                0x10
 #define REG_TMP_COEF_SRCE       0x28
+
+#define DPS310__SPI_RW_MASK 0x80U
+#define DPS310__BUSYTIME_FAILSAFE 10U
+#define DPS310__OSR_SE 3U

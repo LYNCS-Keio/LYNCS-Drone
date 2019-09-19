@@ -1,5 +1,6 @@
 #include "DPS.hpp"
 #include <cmath>
+#include "DPS310K.hpp"
 
 //convert 2´s complement numbers into signed integer numbers.
 template<class uint_type,unsigned int N>
@@ -30,11 +31,14 @@ namespace dps
         m_opMode = (Mode)opMode;
 	    return DPS__SUCCEEDED;
     }
-    esp_err_t DPS::disableFIFO()
+    dps_err_t DPS::disableFIFO()
     {
-        if (DPS_ERR_CHECK(flushFIFO()))return err_;
-        if (DPS_ERR_CHECK(writeByteBitfield(config_registers[FIFO_EN],0U)))return err_;
-	    return err_;
+		dps_err_t ret = flushFIFO();
+        if (ret != DPS__SUCCEEDED)return ret;
+
+        ret = writeByteBitfield(config_registers[FIFO_EN],0U);
+		if (ret != DPS__SUCCEEDED)return ret;
+	    return ret;
     }
     dps_err_t DPS::standby()
     {
@@ -182,7 +186,8 @@ namespace dps
     dps_err_t DPS::getRawResult(int32_t *raw, RegBlock_t reg)
     {
 	    uint8_t buffer[DPS__RESULT_BLOCK_LENGTH] = {0};
-	    if (DPS_ERR_CHECK(readBlock(reg, buffer)))return DPS__FAIL_UNKNOWN;
+		dps_err_t ret = readBlock(reg, buffer);
+	    if (ret != DPS__SUCCEEDED)return ret;
 
 	    *raw = (uint32_t)buffer[0] << 16 | (uint32_t)buffer[1] << 8 | (uint32_t)buffer[2];
 	    *raw = convert_complement<int32_t,24>(*raw);
@@ -205,7 +210,7 @@ namespace dps
 		//wait until measurement is finished
 		ets_delay_us(1000*calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
 		//sampling interval must be over 10ms when using DPS310
-		ets_delay_us(1000*10U);
+		ets_delay_us(1000*DPS310__BUSYTIME_FAILSAFE);
 
 		ret = getSingleResult(result);
 		if (ret != DPS__SUCCEEDED)
@@ -250,7 +255,7 @@ namespace dps
 		//wait until measurement is finished
 		ets_delay_us(1000*calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
 		//sampling interval must be over 10ms when using DPS310
-		ets_delay_us(1000*10U);
+		ets_delay_us(1000*DPS310__BUSYTIME_FAILSAFE);
 
 		ret = getSingleResult(result);
 		if (ret != DPS__SUCCEEDED)
