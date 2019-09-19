@@ -1,3 +1,5 @@
+//とりあえず回路確認用に作ったArduinoIDE用のプログラムです
+/*
 #include <Arduino.h>
 double Duration = 0; //受信した間隔
 double Distance = 0; //距離
@@ -27,3 +29,4 @@ void loop() {
   }
   delay(500);
 }
+*/
