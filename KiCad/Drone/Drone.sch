@@ -832,9 +832,9 @@ RX
 Text Notes 6800 3800 0    50   ~ 0
 TX
 Text GLabel 6000 3800 0    50   Input ~ 0
-PI_PIGPIO_RX
+PI_UART_RX
 Text GLabel 6000 3700 0    50   Input ~ 0
-PI_PIGPIO_TX
+PI_UART_TX
 Text GLabel 9150 5550 2    50   Input ~ 0
 GPIO17
 Text GLabel 9150 5400 2    50   Input ~ 0
