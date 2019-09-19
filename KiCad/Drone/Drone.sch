@@ -875,4 +875,25 @@ Text GLabel 8650 2400 0    50   Input ~ 0
 GPIO23
 Text GLabel 8650 4200 0    50   Input ~ 0
 GPIO19
+Text Notes 3800 2800 0    50   ~ 0
+Anothor 5V power source
+Text GLabel 4600 3100 2    50   Input ~ 0
+5V
+Wire Wire Line
+	4600 3100 4350 3100
+$Comp
+L Connector:Conn_01x02_Female J11
+U 1 1 5D86C630
+P 4150 3200
+F 0 "J11" H 4042 2875 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 4042 2966 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 4150 3200 50  0001 C CNN
+F 3 "~" H 4150 3200 50  0001 C CNN
+	1    4150 3200
+	-1   0    0    1   
+$EndComp
+Text GLabel 4600 3200 2    50   Input ~ 0
+GND
+Wire Wire Line
+	4600 3200 4350 3200
 $EndSCHEMATC
