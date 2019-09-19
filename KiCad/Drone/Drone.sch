@@ -672,9 +672,9 @@ Text GLabel 2300 3350 2    50   Input ~ 0
 GND
 Text Notes 1700 3100 0    50   ~ 0
 ESC
-Text GLabel 3750 3850 0    50   Input ~ 0
-ESC_VIN
 Text GLabel 3750 3750 0    50   Input ~ 0
+ESC_VIN
+Text GLabel 3750 3850 0    50   Input ~ 0
 BAT
 $Comp
 L Connector:Conn_01x04_Female J6
@@ -702,8 +702,8 @@ $Comp
 L Connector:Conn_01x04_Female U2
 U 1 1 5D708C9C
 P 4200 3750
-F 0 "U2" H 4228 3726 50  0000 L CNN
-F 1 "SKI03021" H 4228 3635 50  0000 L CNN
+F 0 "U2" H 3900 3950 50  0000 L CNN
+F 1 "SKI03021" H 3800 3450 50  0000 L CNN
 F 2 "Package_TO_SOT_SMD:TO-263-3_TabPin4" H 4200 3750 50  0001 C CNN
 F 3 "~" H 4200 3750 50  0001 C CNN
 	1    4200 3750
@@ -832,9 +832,9 @@ RX
 Text Notes 6800 3800 0    50   ~ 0
 TX
 Text GLabel 6000 3800 0    50   Input ~ 0
-PI_PIGPIO_RX
+PI_UART_RX
 Text GLabel 6000 3700 0    50   Input ~ 0
-PI_PIGPIO_TX
+PI_UART_TX
 Text GLabel 9150 5550 2    50   Input ~ 0
 GPIO17
 Text GLabel 9150 5400 2    50   Input ~ 0
@@ -875,4 +875,31 @@ Text GLabel 8650 2400 0    50   Input ~ 0
 GPIO23
 Text GLabel 8650 4200 0    50   Input ~ 0
 GPIO19
+Text Notes 3800 2800 0    50   ~ 0
+Anothor 5V power source
+Text GLabel 4600 3100 2    50   Input ~ 0
+5V
+Wire Wire Line
+	4600 3100 4350 3100
+$Comp
+L Connector:Conn_01x02_Female J11
+U 1 1 5D86C630
+P 4150 3200
+F 0 "J11" H 4042 2875 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 4042 2966 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 4150 3200 50  0001 C CNN
+F 3 "~" H 4150 3200 50  0001 C CNN
+	1    4150 3200
+	-1   0    0    1   
+$EndComp
+Text GLabel 4600 3200 2    50   Input ~ 0
+GND
+Wire Wire Line
+	4600 3200 4350 3200
+Text Notes 4300 3700 0    50   ~ 0
+GATE
+Text Notes 4300 3800 0    50   ~ 0
+DRAIN
+Text Notes 4300 3900 0    50   ~ 0
+SOURCE
 $EndSCHEMATC
