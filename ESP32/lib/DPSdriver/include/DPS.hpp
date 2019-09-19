@@ -7,7 +7,6 @@
 #define DPS_ERR_CHECK(x) (x)
 namespace dps
 {
-
     typedef SPI_t dps_bus_t;
     typedef spi_device_handle_t dps_addr_handle_t;
     
@@ -20,7 +19,7 @@ namespace dps
         int32_t err_; //TODO:delete this variable
     protected:
         static const int32_t scaling_facts[DPS__NUM_OF_SCAL_FACTS];
-        uint8_t buffer_[18];     /*!< Commom buffer for temporary data */
+        uint8_t buffer_[18];     /*!< Common buffer for temporary data */
         dps_err_t setOpMode(Mode opMode);
         dps_err_t disableFIFO();
         dps_err_t standby();
@@ -53,10 +52,11 @@ namespace dps
         DPS(dps_bus_t *bus) : bus_{bus}, buffer_{0}
         {}
         ~DPS();
-        dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num){
+        dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num)
+        {
             if (DPS_ERR_CHECK(bus_->addDevice(spi_mode, clock_speed_hz, cs_io_num, &addr_)))return DPS__FAIL_COMMUNICATION;
             return DPS__SUCCEEDED;
-            }
+        }
         //! \name Read / Write
         //! Functions to perform direct read or write operation(s) to registers.
         //! \{
