@@ -666,15 +666,11 @@ Wire Wire Line
 	2300 3750 1900 3750
 Wire Wire Line
 	1900 3850 2300 3850
-Wire Wire Line
-	1900 3350 2300 3350
-Text GLabel 2300 3350 2    50   Input ~ 0
-GND
 Text Notes 1700 3100 0    50   ~ 0
 ESC
-Text GLabel 3750 3750 0    50   Input ~ 0
+Text GLabel 3750 3500 0    50   Input ~ 0
 ESC_VIN
-Text GLabel 3750 3850 0    50   Input ~ 0
+Text GLabel 3950 3500 2    50   Input ~ 0
 BAT
 $Comp
 L Connector:Conn_01x04_Female J6
@@ -709,20 +705,7 @@ F 3 "~" H 4200 3750 50  0001 C CNN
 	1    4200 3750
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3750 3650 4000 3650
-Wire Wire Line
-	4000 3750 3850 3750
-Wire Wire Line
-	4000 3950 3850 3950
-Wire Wire Line
-	3850 3950 3850 3750
-Connection ~ 3850 3750
-Wire Wire Line
-	3850 3750 3750 3750
-Wire Wire Line
-	3750 3850 4000 3850
-Text Notes 3150 3400 0    50   ~ 0
+Text Notes 3100 3400 0    50   ~ 0
 SKI03021 PowerMOSFET
 Wire Wire Line
 	2250 2600 2900 2600
@@ -802,7 +785,7 @@ $EndComp
 Text GLabel 3900 4450 2    50   Input ~ 0
 ESC_VIN
 Text GLabel 3900 4550 2    50   Input ~ 0
-GND
+ESC_GND
 Wire Wire Line
 	3900 4550 3700 4550
 Wire Wire Line
@@ -902,4 +885,23 @@ Text Notes 4300 3800 0    50   ~ 0
 DRAIN
 Text Notes 4300 3900 0    50   ~ 0
 SOURCE
+Wire Wire Line
+	4000 3950 3850 3950
+Wire Wire Line
+	3750 3650 4000 3650
+Wire Wire Line
+	3750 3850 4000 3850
+Wire Wire Line
+	3850 3750 3750 3750
+Wire Wire Line
+	4000 3750 3850 3750
+Connection ~ 3850 3750
+Wire Wire Line
+	3850 3950 3850 3750
+Wire Wire Line
+	3950 3500 3750 3500
+Text GLabel 3750 3850 0    50   Input ~ 0
+ESC_GND
+Text GLabel 3750 3750 0    50   Input ~ 0
+GND
 $EndSCHEMATC
