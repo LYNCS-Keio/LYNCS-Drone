@@ -1,5 +1,11 @@
 //とりあえず回路確認用に作ったArduinoIDE用のプログラムです
 /*
+VCC → 5V
+ECHO → 15
+TRIG → 2
+GND → GND
+*/
+/*
 #include <Arduino.h>
 double Duration = 0; //受信した間隔
 double Distance = 0; //距離
