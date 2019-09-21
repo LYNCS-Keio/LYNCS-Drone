@@ -1,3 +1,18 @@
+/**
+ * @file DPS.hpp
+ * @brief Driver of DPS, a series of pressure sensor
+ * 
+ * "Dps310" represents Infineon's high-sensetive pressure and temperature sensor. 
+ * It measures in ranges of 300 - 1200 hPa and -40 and 85 °C. 
+ * The sensor can be connected via SPI or I2C. 
+ * It is able to perform single measurements
+ * or to perform continuous measurements of temperature and pressure at the same time, 
+ * and stores the results in a FIFO to reduce bus communication. 
+ * 
+ * @version 0.1
+ * @date 2019-09-20
+ * 
+ */
 #pragma once
 
 #include "SPIbus.hpp"
@@ -5,58 +20,83 @@
 #include "../util/dps_const.hpp"
 
 #define DPS_ERR_CHECK(x) (x)
+/**
+ * @brief dps name space
+ * 
+ */
 namespace dps
 {
     typedef SPI_t dps_bus_t;
     typedef spi_device_handle_t dps_addr_handle_t;
-    
+    /**
+     * @brief DPS class
+     * This abstract class provides fundamental functions like read/write functions.
+     */
     class DPS
     {
     private:
-        dps_bus_t* bus_;         /*!< Communication bus pointer, I2C / SPI */
-        dps_addr_handle_t addr_;
-        Mode m_opMode;
-        int32_t err_; //TODO:delete this variable
-    protected:
-        static const int32_t scaling_facts[DPS__NUM_OF_SCAL_FACTS];
-        uint8_t buffer_[18];     /*!< Common buffer for temporary data */
-        dps_err_t setOpMode(Mode opMode);
-        dps_err_t disableFIFO();
-        dps_err_t standby();
-        uint8_t m_tempMr;       //Temperature measurement rate
-        uint8_t m_tempOsr;      //Temperature oversampling rate
-        uint8_t m_prsMr;        //Pressure measurement rate
-        uint8_t m_prsOsr;         //Pressure oversampling rate
-        dps_err_t startMeasureTempOnce(uint8_t oversamplingRate);
-        dps_err_t startMeasureTempOnce();
-        dps_err_t startMeasurePressureOnce(uint8_t oversamplingRate);
-        dps_err_t startMeasurePressureOnce();
-        dps_err_t getRawResult(int32_t *raw, RegBlock_t reg);
-        dps_err_t getSingleResult(float &result);
-        dps_err_t correctTemp();
-        uint16_t calcBusyTime(uint16_t mr, uint16_t osr);
-        //virtual functions
-        virtual float calcTemp(int32_t raw) = 0;
-        virtual float calcPressure(int32_t raw) = 0;
-        virtual dps_err_t flushFIFO() = 0;
-        virtual dps_err_t readcoeffs() = 0;
-        virtual dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr);
-        virtual dps_err_t configPressure(uint8_t prs_mr, uint8_t prs_osr);
-        	//flags
-	    uint8_t m_initFail;
-	    uint8_t m_productID;
-	    uint8_t m_revisionID;
+    /** Communication bus pointer, I2C / SPI */
+    dps_bus_t* bus_;
+    dps_addr_handle_t addr_;
+    Mode m_opMode;
+    int32_t err_; //TODO:delete this variable
 
-        DPS(){}
+    protected:
+    static const int32_t scaling_facts[DPS__NUM_OF_SCAL_FACTS];
+    /** Common buffer for temporary data */
+    uint8_t buffer_[18];
+    dps_err_t setOpMode(Mode opMode);
+    dps_err_t disableFIFO();
+    dps_err_t standby();
+    /** Temperature measurement rate*/
+    uint8_t m_tempMr;
+    /** Temperature oversampling rate*/
+    uint8_t m_tempOsr;
+    /** Pressure measurement rate*/
+    uint8_t m_prsMr;
+    /** Pressure oversampling rate*/
+    uint8_t m_prsOsr;
+    dps_err_t startMeasureTempOnce(uint8_t oversamplingRate);
+    dps_err_t startMeasureTempOnce();
+    dps_err_t startMeasurePressureOnce(uint8_t oversamplingRate);
+    dps_err_t startMeasurePressureOnce();
+    dps_err_t getRawResult(int32_t *raw, RegBlock_t reg);
+    dps_err_t getSingleResult(float &result);
+    dps_err_t correctTemp();
+    uint16_t calcBusyTime(uint16_t mr, uint16_t osr);
+    //virtual functions
+    virtual float calcTemp(int32_t raw) = 0;
+    virtual float calcPressure(int32_t raw) = 0;
+    virtual dps_err_t flushFIFO() = 0;
+    virtual dps_err_t readcoeffs() = 0;
+    virtual dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr);
+    virtual dps_err_t configPressure(uint8_t prs_mr, uint8_t prs_osr);
+    //flags
+	uint8_t m_initFail;
+	uint8_t m_productID;
+	uint8_t m_revisionID;
+    DPS(){}
+
     public:
         DPS(dps_bus_t *bus) : bus_{bus}, buffer_{0}
         {}
+
         ~DPS();
+
+        /**
+         * @brief SPIbus initialization
+         * 
+         * @param spi_mode          [SPI mode (0 to 3)] 
+         * @param clock_speed_hz    [Clock speed in Hz]
+         * @param cs_io_num         [ChipSelect/SlaveSelect pin]
+         * @return dps_err_t        [error code]
+         */
         dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num)
         {
             if (DPS_ERR_CHECK(bus_->addDevice(spi_mode, clock_speed_hz, cs_io_num, &addr_)))return DPS__FAIL_COMMUNICATION;
             return DPS__SUCCEEDED;
         }
+        
         //! \name Read / Write
         //! Functions to perform direct read or write operation(s) to registers.
         //! \{
@@ -72,11 +112,16 @@ namespace dps
             dps_err_t writeBytes(uint8_t regAddr, size_t length, const uint8_t* data);
             dps_err_t writeByteBitfield(uint8_t regAddr, uint8_t mask, uint8_t shift, uint8_t data);
             dps_err_t writeByteBitfield(RegMask_t regMask, uint8_t data);
-        //! \}
-        dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
-        dps_err_t measureTempOnce(float &result);
-        dps_err_t measurePressureOnce(float &result, uint8_t oversamplingRate);
-        dps_err_t measurePressureOnce(float &result);
+        ///! \}
+
+        //! \name Measurement
+        //! Functions to perform measurement of pressure or temperature.
+        //! \{
+            dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
+            dps_err_t measureTempOnce(float &result);
+            dps_err_t measurePressureOnce(float &result, uint8_t oversamplingRate);
+            dps_err_t measurePressureOnce(float &result);
+        ///! \}
     };
     
     

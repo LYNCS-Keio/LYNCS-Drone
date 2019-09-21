@@ -1,8 +1,8 @@
 #include "DPS310.hpp"
-#include "DPS310K.hpp"
 #include "../util/dps_const.hpp"
 #include "../util/dps310_config.hpp"
-#include <stdio.h>
+
+constexpr uint8_t DPS310__OSR_SE = 3U;
 
 //convert 2´s complement numbers into signed integer numbers.
 template<class uint_type,unsigned int N>
