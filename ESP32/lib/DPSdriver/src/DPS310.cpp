@@ -1,7 +1,6 @@
 #include "DPS310.hpp"
 #include "../util/dps_const.hpp"
 #include "../util/dps310_config.hpp"
-#include <stdio.h>
 
 constexpr uint8_t DPS310__OSR_SE = 3U;
 
