@@ -12,6 +12,7 @@
 #include "SPIbus.hpp"
 #include "DPS.hpp"
 #include "DPS310.hpp"
+#include "MPU9255.hpp"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"

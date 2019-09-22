@@ -23,9 +23,8 @@ namespace mpu
     /*!< Common buffer for temporary data */
     uint8_t buffer_[16];
 
-    public:             
-    
-    MPU(mpu_bus_t& bus,mpu_addr_handle_t addr);
+    public:
+    MPU(mpu_bus_t& bus);
     ~MPU();
     virtual mpu_err_t initialize() = 0;
 
