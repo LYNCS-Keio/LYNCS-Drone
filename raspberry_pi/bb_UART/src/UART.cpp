@@ -5,37 +5,40 @@ namespace uart
     UART::UART(uart_conf& conf_) : conf(conf_), sequence_num(0) {}
     
     template <class T>
-    uart_err_t UART::transmit(const T &buf_)
+    uart_err_t UART::create_pdu(const char &type, const T &data_)
     {
-        if (transmit_queue.size() + (int)sizeof(T) > 1024) {
-            return(UART_BUFFER_OVER);
+        size_t size = sizeof(T)
+        std::unique_ptr<pdu> buf(new pdu);
 
+        (*buf).data.type = type;
+
+        if (conf.ENABLE_ECC == false){
+            (*buf).data.data = (char*)&data_;
         } else {
-            std::unique_ptr<uint8_t> buf(new T(1));
-            buf = (uint8_t*)&buf_;
-
-            // キュー追加、dataサイズがペイロード最大サイズを超える場合は分割
-            int j = 0;
-            for (int i=0; i<(float)sizeof(T)/conf.MAX_PAYLOAD_SIZE; i++) {
-                const uint8_t header = sequence_num & 0b00111111;
-                transmit_queue.push(header);
-                if (sequence_num == 63) {
-                    sequence_num = 0;
-                } else {
-                    sequence_num++;
-                }
-                for (j; j<conf.MAX_PAYLOAD_SIZE*(i+1); j++){
-                    if (j < (int)sizeof(T)){
-                        transmit_queue.push(*buf[j]);
-                    } else {
-                        break;
-                    }
-
-                }
-
-            }
-
+            calc_parity((*buf).data.data, data_, size);
         }
+        
+        (*buf).data.checksum = std::accumulate((*buf).data.data, 
+            (*buf).data.data+(uint8_t)size, 0) / (uint8_t)size;
+
+        (*buf).header.payload_size = (char)size;
+        
+        lock.lock();
+        (*buf).header.seq_num = sequence_num;
+        if (sequence_num == 255) {
+            sequence_num = 0;
+        } else {
+            sequence_num++;
+        }
+        lock.unlock();
+
+        (*buf).header.checksum = ((*buf).header.seq_num + (*buf).header.payload_size) / 2;
+           
+    }
+
+    template<class T>
+    void UART::calc_parity(char* buf, const T &data_, size_t &size)
+    {
 
     }
 

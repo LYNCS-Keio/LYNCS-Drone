@@ -3,23 +3,8 @@
 #include <cstdint>
 #include <queue>
 #include <memory>
-
-// 
-// packet
-// 
-// name             : bit 
-// header   ACK     : 11xxxxxx (x: sequence_num)
-//          data    : 00xxxxxx (x: sequence_num)
-//                   
-// payload_size     : xxxxxxxx
-// 
-// hash             : xxxxyyyy (x: header's hash, y: payload's hash)
-// 
-// payload          : xxxxxxxx
-//                  : xxxxxxxx
-//                    ~~~~~~~~
-//                  : xxxxxxxx 
-// 
+#include <mutex>
+#include <numeric>
 
 namespace uart
 {
@@ -34,16 +19,32 @@ namespace uart
         UART_BUFFER_OVER        = -6
     };
 
+    struct pdu
+    {
+        struct header
+        {
+            uint8_t seq_num;
+            uint8_t payload_size;
+            uint8_t checksum;
+        };
+        struct data
+        {
+            uint8_t type;
+            uint8_t* data;
+            uint8_t checksum;
+        };
+    };
+
     struct uart_conf
     {
         int TX              = -1;   // TX pin
         int RX              = -1;   // RX pin
         int BAUD            = 9600;
         int DATA_BIT_LEN    = 8;    // bits
-        int MAX_PAYLOAD_SIZE= 32;   // ペイロードサイズ(1-255bytes)
         int STOP_BIT        = 2;
         int OFFSET          = 0;
         bool ENABLE_RESEND  = true; // 再送
+        bool ENABLE_ECC     = false;
     };
 
     class UART
@@ -52,14 +53,15 @@ namespace uart
         const uart_conf conf;
         uint8_t sequence_num;
         std::queue<uint8_t> transmit_queue;
+        std::mutex lock;
 
         public:
         UART(uart_conf&);
         virtual uart_err_t initialize();
-        // パケット送信
-        virtual int thrower(const uint8_t*);
-        // パケット作成→キュー追加
-        template <class T> uart_err_t transmit(const T&);
+        virtual int thrower(const char*);
+        // Generate Protocol Data Unit
+        template <class T> uart_err_t create_pdu(const char&, const T&);
+        template <class T> void calc_parity(char*, const T&, size_t&);
         virtual int receive();
         uart_err_t get_data();
 
