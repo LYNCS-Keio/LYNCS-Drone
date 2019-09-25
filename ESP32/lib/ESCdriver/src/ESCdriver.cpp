@@ -3,7 +3,7 @@
 
 ESCdriver::ESCdriver(){}
 
-int ESCdriver::Intialize(std::vector<int>& pins, mcpwm_config_t& conf)
+int ESCdriver::initialize(std::vector<int>& pins, mcpwm_config_t& conf)
 {
     if ((i + pins.size()) > 12) { return(-1); }
     

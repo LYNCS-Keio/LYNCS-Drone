@@ -70,7 +70,7 @@ extern "C" void app_main()
     conf.counter_mode = MCPWM_UP_COUNTER;
     
     ESCdriver esc;              //ここをコメントアウトすると動く
-    esc.Intialize(pins, conf);  //ここも
+    esc.initialize(pins, conf);  //ここも
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while (1)

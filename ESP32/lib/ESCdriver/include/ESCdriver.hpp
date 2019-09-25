@@ -26,7 +26,7 @@ class ESCdriver
 {
     public:
     ESCdriver();
-    int Intialize(std::vector<int>&, mcpwm_config_t&);
+    int initialize(std::vector<int>&, mcpwm_config_t&);
     int setDuty(int, float);
     int setDuty_in_us(int, int);
 
