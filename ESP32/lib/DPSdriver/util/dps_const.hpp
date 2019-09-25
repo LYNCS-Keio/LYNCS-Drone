@@ -6,9 +6,6 @@ namespace dps
 //sea level pressure
 constexpr double DPS__SEA_LEVEL_PRESSURE = 1018.6;
 
-// slave address same for 422 and 310 (to be proved for future sensors)
-constexpr uint8_t DPS__RESULT_BLOCK_LENGTH = 3;
-
 enum DPSMeasurementRate
 {
     DPS__MEASUREMENT_RATE_1 = 0,
@@ -41,7 +38,7 @@ enum dps_err_t
     DPS__SUCCEEDED = 0,
     DPS__FAIL_UNKNOWN = -1,
     DPS__FAIL_INIT_FAILED = -2,
-    DPS__FAIL_TOOBUSY = -3,
+    DPS__FAIL_TOO_BUSY = -3,
     DPS__FAIL_UNFINISHED = -4,
     DPS__FAIL_CANNOT_WRITE_REG = -5,
     DPS__FAIL_COMMUNICATION = -6
