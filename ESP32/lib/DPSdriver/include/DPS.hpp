@@ -40,7 +40,6 @@ class DPS
     dps_bus_t* bus_;
     dps_addr_handle_t addr_;
     Mode m_opMode;
-    int32_t err_; //TODO:delete this variable
 
     protected:
     static const int32_t scaling_facts[];
