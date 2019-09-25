@@ -1,13 +1,13 @@
+/**
+ * @file main.cpp
+ * Main function.
+ */
 // =========================================================================
 // This code is placed under the MIT License
 // Copyright 2019 Laboratory of sYNsetic Cosmic Science. All rights reserved.
 // For the license information refer to LICENSE file in root directory.
 // =========================================================================
 
-/**
- * @file main.cpp
- * Main function.
- */
 #include <stdio.h>
 #include "SPIbus.hpp"
 #include "DPS.hpp"
@@ -41,7 +41,7 @@ extern "C" void app_main()
     config.intr_flags = 0;
     spi_bus_initialize(HSPI_HOST, &config, 0); // 0 DMA not used
     
-    dps310::DPS310 myDPS(&mySPI, CS_PIN);
+    dps310::DPS310 myDPS(&mySPI);
     myDPS.dev_init(SPI_MODE,SPI_CLOCK,CS_PIN);
     myDPS.setTmpOversamplingRate(1);
     myDPS.setPrsOversamplingRate(1);
@@ -52,8 +52,8 @@ extern "C" void app_main()
     {
         return;
     }
-    
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
     while (1)
     {
         float H;

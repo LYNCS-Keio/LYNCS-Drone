@@ -17,7 +17,7 @@ static inline int convert_complement(uint_type num){
 namespace dps310
 {
 
-    DPS310::DPS310(dps_bus_t *bus, int cs_pin_num) : DPS(bus),
+    DPS310::DPS310(dps_bus_t *bus) : DPS(bus),
     tmp_over_sampling_rate_(1),
     prs_over_sampling_rate_(1)
     {
