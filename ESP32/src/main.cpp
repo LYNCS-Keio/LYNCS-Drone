@@ -56,12 +56,11 @@ extern "C" void app_main()
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     while (1)
     {
-        float T, P;
+        float H;
         dps::dps_err_t ret;
-        ret = myDPS.measureTempOnce(T);
-        printf("T = %f degree, ret = %d\n",T, ret);
-        ret = myDPS.measurePressureOnce(P);
-        printf("P= %f Pascal ret = %d\n", P, ret);
+        ret = myDPS.measureHeightOnce(H, 1);
+        printf("H= %f meter ret = %d\n",H, ret);
+
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }

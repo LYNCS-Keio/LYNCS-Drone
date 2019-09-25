@@ -4,7 +4,7 @@ namespace dps
 {
 ///////////     common    ///////////
 //sea level pressure
-constexpr double DPS__SEA_LEVEL_PRESSURE = 1000.1;
+constexpr double DPS__SEA_LEVEL_PRESSURE = 1018.6;
 
 // slave address same for 422 and 310 (to be proved for future sensors)
 constexpr uint8_t DPS__RESULT_BLOCK_LENGTH = 3;

@@ -1,4 +1,5 @@
 #include "DPS.hpp"
+#include <cmath>
 
 constexpr uint8_t DPS310__BUSYTIME_FAILSAFE = 10U;
 
@@ -280,4 +281,18 @@ dps_err_t DPS::measurePressureOnce(float &result)
 {
 	return measurePressureOnce(result, m_prsOsr);
 }
+
+dps_err_t DPS::measureHeightOnce(float &result, uint8_t oversamplingrRate)
+{
+	float T = 0,P = 0;
+	dps_err_t ret = measureTempOnce(T, oversamplingrRate);
+	if (ret != DPS__SUCCEEDED)return ret;
+
+	ret = measurePressureOnce(P, oversamplingrRate);
+	if (ret != DPS__SUCCEEDED)return ret;
+
+	result = (std::pow(DPS__SEA_LEVEL_PRESSURE/(P/100.0),(1.0/5.257)) - 1)*(T + 273.15)/0.0065;
+	return DPS__SUCCEEDED;
+}
+
 } // namespace dps
