@@ -1,14 +1,10 @@
 #pragma once
 #include "dps_register.hpp"
+namespace dps
+{
 ///////////     common    ///////////
 //sea level pressure
-constexpr double DPS__SEA_LEVEL_PRESSURE = 1000.1;
-
-// slave address same for 422 and 310 (to be proved for future sensors)
-constexpr uint8_t DPS__FIFO_SIZE = 32;
-constexpr uint8_t DPS__STD_SLAVE_ADDRESS = 0x77U;
-constexpr uint8_t DPS__RESULT_BLOCK_LENGTH = 3;
-constexpr uint8_t NUM_OF_COMMON_REGMASKS = 16;
+constexpr double DPS__SEA_LEVEL_PRESSURE = 1018.6;
 
 enum DPSMeasurementRate
 {
@@ -36,17 +32,13 @@ enum DPSOversamplingRate
 //we use 0.1 ms units for time calculations, so 10 units are one millisecond
 constexpr uint8_t DPS__BUSYTIME_SCALING = 10U;
 
-constexpr uint8_t DPS__NUM_OF_SCAL_FACTS = 8;
-
-namespace dps
-{
 // status code
 enum dps_err_t
 {
     DPS__SUCCEEDED = 0,
     DPS__FAIL_UNKNOWN = -1,
     DPS__FAIL_INIT_FAILED = -2,
-    DPS__FAIL_TOOBUSY = -3,
+    DPS__FAIL_TOO_BUSY = -3,
     DPS__FAIL_UNFINISHED = -4,
     DPS__FAIL_CANNOT_WRITE_REG = -5,
     DPS__FAIL_COMMUNICATION = -6
@@ -93,16 +85,13 @@ enum Config_Registers_e
     INT_FLAG_PRS,
 };
 
-constexpr uint8_t NUM_OF_COMMON_REGMASKS = 16;
-
-const RegMask_t config_registers[NUM_OF_COMMON_REGMASKS] = {
+const RegMask_t config_registers[] = {
     {0x07, 0x70, 4}, // TEMP_MR
     {0x07, 0x07, 0}, // TEMP_OSR
     {0x06, 0x70, 4}, // PRS_MR
     {0x06, 0x07, 0}, // PRS_OSR
     {0x08, 0x07, 0}, // MSR_CTRL
     {0x09, 0x02, 1}, // FIFO_EN
-
     {0x08, 0x20, 5}, // TEMP_RDY
     {0x08, 0x10, 4}, // PRS_RDY
     {0x0A, 0x04, 2}, // INT_FLAG_FIFO

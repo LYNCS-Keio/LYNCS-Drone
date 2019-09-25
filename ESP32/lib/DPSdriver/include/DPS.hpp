@@ -26,23 +26,23 @@
  */
 namespace dps
 {
-    typedef SPI_t dps_bus_t;
-    typedef spi_device_handle_t dps_addr_handle_t;
-    /**
-     * @brief DPS class
-     * This abstract class provides fundamental functions like read/write functions.
-     */
-    class DPS
-    {
+
+typedef SPI_t dps_bus_t;
+typedef spi_device_handle_t dps_addr_handle_t;
+/**
+ * @brief DPS class
+ * This abstract class provides fundamental functions like read/write functions.
+ */
+class DPS
+{
     private:
     /** Communication bus pointer, I2C / SPI */
     dps_bus_t* bus_;
     dps_addr_handle_t addr_;
     Mode m_opMode;
-    int32_t err_; //TODO:delete this variable
 
     protected:
-    static const int32_t scaling_facts[DPS__NUM_OF_SCAL_FACTS];
+    static const int32_t scaling_facts[];
     /** Common buffer for temporary data */
     uint8_t buffer_[18];
     dps_err_t setOpMode(Mode opMode);
@@ -78,124 +78,123 @@ namespace dps
     DPS(){}
 
     public:
-        DPS(dps_bus_t *bus) : bus_{bus}, buffer_{0}
-        {}
+    DPS(dps_bus_t *bus) : bus_{bus}, buffer_{0}
+    {}
 
-        ~DPS();
+    ~DPS();
 
-        /**
-         * @brief SPIbus initialization
-         * 
-         * @param spi_mode          [SPI mode (0 to 3)] 
-         * @param clock_speed_hz    [Clock speed in Hz]
-         * @param cs_io_num         [ChipSelect/SlaveSelect pin]
-         * @return dps_err_t        [error code]
-         */
-        dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num)
-        {
-            if (DPS_ERR_CHECK(bus_->addDevice(spi_mode, clock_speed_hz, cs_io_num, &addr_)))return DPS__FAIL_COMMUNICATION;
-            return DPS__SUCCEEDED;
-        }
-        
-        //! \name Read / Write
-        //! Functions to perform direct read or write operation(s) to registers.
-        //! \{
-            dps_err_t readBit(uint8_t regAddr, uint8_t bitNum, uint8_t* data);
-            dps_err_t readBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t* data);
-            dps_err_t readByte(uint8_t regAddr, uint8_t* data);
-            dps_err_t readBytes(uint8_t regAddr, size_t length, uint8_t* data);
-            dps_err_t readByteBitfield(RegMask_t regMask, uint8_t* data);
-            dps_err_t readBlock(RegBlock_t regBlock, uint8_t* data);
-            dps_err_t writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
-            dps_err_t writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
-            dps_err_t writeByte(uint8_t regAddr, uint8_t data);
-            dps_err_t writeBytes(uint8_t regAddr, size_t length, const uint8_t* data);
-            dps_err_t writeByteBitfield(uint8_t regAddr, uint8_t mask, uint8_t shift, uint8_t data);
-            dps_err_t writeByteBitfield(RegMask_t regMask, uint8_t data);
-        ///! \}
-
-        //! \name Measurement
-        //! Functions to perform measurement of pressure or temperature.
-        //! \{
-            dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
-            dps_err_t measureTempOnce(float &result);
-            dps_err_t measurePressureOnce(float &result, uint8_t oversamplingRate);
-            dps_err_t measurePressureOnce(float &result);
-        ///! \}
-    };
+    /**
+     * @brief SPIbus initialization
+     * 
+     * @param spi_mode          [SPI mode (0 to 3)] 
+     * @param clock_speed_hz    [Clock speed in Hz]
+     * @param cs_io_num         [ChipSelect/SlaveSelect pin]
+     * @return dps_err_t        [error code]
+     */
+    dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num)
+    {
+        if (DPS_ERR_CHECK(bus_->addDevice(spi_mode, clock_speed_hz, cs_io_num, &addr_)))return DPS__FAIL_COMMUNICATION;
+        return DPS__SUCCEEDED;
+    }
     
-    
+    //! \name Read / Write
+    //! Functions to perform direct read or write operation(s) to registers.
+    //! \{
+        dps_err_t readBit(uint8_t regAddr, uint8_t bitNum, uint8_t* data);
+        dps_err_t readBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t* data);
+        dps_err_t readByte(uint8_t regAddr, uint8_t* data);
+        dps_err_t readBytes(uint8_t regAddr, size_t length, uint8_t* data);
+        dps_err_t readByteBitfield(RegMask_t regMask, uint8_t* data);
+        dps_err_t readBlock(RegBlock_t regBlock, uint8_t* data);
+        dps_err_t writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data);
+        dps_err_t writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
+        dps_err_t writeByte(uint8_t regAddr, uint8_t data);
+        dps_err_t writeBytes(uint8_t regAddr, size_t length, const uint8_t* data);
+        dps_err_t writeByteBitfield(uint8_t regAddr, uint8_t mask, uint8_t shift, uint8_t data);
+        dps_err_t writeByteBitfield(RegMask_t regMask, uint8_t data);
+    ///! \}
 
-    /*! Read a single bit from a register*/
-    inline dps_err_t DPS::readBit(uint8_t regAddr, uint8_t bitNum, uint8_t* data)
-    {
-        if (DPS_ERR_CHECK(bus_->readBit(addr_, regAddr, bitNum, data)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
-    /*! Read a range of bits from a register */
-    inline dps_err_t DPS::readBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t* data)
-    {
-        if (DPS_ERR_CHECK(bus_->readBits(addr_, regAddr, bitStart, length, data)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
-    /*! Read a single register */
-    inline dps_err_t DPS::readByte(uint8_t regAddr, uint8_t* data)
-    {
-        if (DPS_ERR_CHECK(bus_->readByte(addr_, regAddr, data)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
-    /*! Read data from sequence of registers */
-    inline dps_err_t DPS::readBytes(uint8_t regAddr, size_t length, uint8_t* data)
-    {
-        if (DPS_ERR_CHECK(bus_->readBytes(addr_, regAddr, length, data)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
-    inline dps_err_t DPS::readByteBitfield(RegMask_t regMask, uint8_t* data)
-    {
-        dps_err_t ret = readByte(regMask.regAddress,data);
-        *data = ((*data) & regMask.mask) >> regMask.shift;
-        return ret;
-    }
-    /*! Read data from sequence of registers */
-    inline dps_err_t DPS::readBlock(RegBlock_t regBlock, uint8_t* data){
-        //mask regAddress
-	    regBlock.regAddress &= ~(0x80); //register address is 7bit
-        return readBytes(regBlock.regAddress,regBlock.length,data);
-    }
-    /*! Write a single bit to a register */
-    inline dps_err_t DPS::writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data)
-    {
-        if (DPS_ERR_CHECK(bus_->writeBit(addr_, regAddr, bitNum, data)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
-    /*! Write a range of bits to a register */
-    inline dps_err_t DPS::writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data)
-    {
-        if (DPS_ERR_CHECK(bus_->writeBits(addr_, regAddr, bitStart, length, data)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
-    /*! Write a value to a register */
-    inline dps_err_t DPS::writeByte(uint8_t regAddr, uint8_t data)
-    {
-        if (DPS_ERR_CHECK(bus_->writeByte(addr_, regAddr, data)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
-    /*! Write a sequence to data to a sequence of registers */
-    inline dps_err_t DPS::writeBytes(uint8_t regAddr, size_t length, const uint8_t* data)
-    {
-        if (DPS_ERR_CHECK(bus_->writeBytes(addr_, regAddr, length, data)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
-    /*! Write a value to register using masks*/
-    inline dps_err_t DPS::writeByteBitfield(uint8_t regAddr, uint8_t mask, uint8_t shift, uint8_t data)
-    {
-        uint8_t old_data;
-        dps_err_t ret = readByte(regAddr,&old_data);
-        if (ret != DPS__SUCCEEDED)return ret;
-        return writeByte(regAddr, ((uint8_t)old_data & ~mask) | ((data << shift) & mask));
-    }
-    inline dps_err_t DPS::writeByteBitfield(RegMask_t regMask, uint8_t data){
-        return writeByteBitfield(regMask.regAddress, regMask.mask, regMask.shift, data);
-    }
+    //! \name Measurement
+    //! Functions to perform measurement of pressure or temperature.
+    //! \{
+        dps_err_t measureTempOnce(float &result, uint8_t oversamplingRate);
+        dps_err_t measureTempOnce(float &result);
+        dps_err_t measurePressureOnce(float &result, uint8_t oversamplingRate);
+        dps_err_t measurePressureOnce(float &result);
+        dps_err_t measureHeightOnce(float &result, uint8_t oversamplingRate);
+    ///! \}
+};
+
+/*! Read a single bit from a register*/
+inline dps_err_t DPS::readBit(uint8_t regAddr, uint8_t bitNum, uint8_t* data)
+{
+    if (DPS_ERR_CHECK(bus_->readBit(addr_, regAddr, bitNum, data)))return DPS__FAIL_COMMUNICATION;
+    return DPS__SUCCEEDED;
+}
+/*! Read a range of bits from a register */
+inline dps_err_t DPS::readBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t* data)
+{
+    if (DPS_ERR_CHECK(bus_->readBits(addr_, regAddr, bitStart, length, data)))return DPS__FAIL_COMMUNICATION;
+    return DPS__SUCCEEDED;
+}
+/*! Read a single register */
+inline dps_err_t DPS::readByte(uint8_t regAddr, uint8_t* data)
+{
+    if (DPS_ERR_CHECK(bus_->readByte(addr_, regAddr, data)))return DPS__FAIL_COMMUNICATION;
+    return DPS__SUCCEEDED;
+}
+/*! Read data from sequence of registers */
+inline dps_err_t DPS::readBytes(uint8_t regAddr, size_t length, uint8_t* data)
+{
+    if (DPS_ERR_CHECK(bus_->readBytes(addr_, regAddr, length, data)))return DPS__FAIL_COMMUNICATION;
+    return DPS__SUCCEEDED;
+}
+inline dps_err_t DPS::readByteBitfield(RegMask_t regMask, uint8_t* data)
+{
+    dps_err_t ret = readByte(regMask.regAddress,data);
+    *data = ((*data) & regMask.mask) >> regMask.shift;
+    return ret;
+}
+/*! Read data from sequence of registers */
+inline dps_err_t DPS::readBlock(RegBlock_t regBlock, uint8_t* data){
+    //mask regAddress
+    regBlock.regAddress &= ~(0x80); //register address is 7bit
+    return readBytes(regBlock.regAddress,regBlock.length,data);
+}
+/*! Write a single bit to a register */
+inline dps_err_t DPS::writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data)
+{
+    if (DPS_ERR_CHECK(bus_->writeBit(addr_, regAddr, bitNum, data)))return DPS__FAIL_COMMUNICATION;
+    return DPS__SUCCEEDED;
+}
+/*! Write a range of bits to a register */
+inline dps_err_t DPS::writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data)
+{
+    if (DPS_ERR_CHECK(bus_->writeBits(addr_, regAddr, bitStart, length, data)))return DPS__FAIL_COMMUNICATION;
+    return DPS__SUCCEEDED;
+}
+/*! Write a value to a register */
+inline dps_err_t DPS::writeByte(uint8_t regAddr, uint8_t data)
+{
+    if (DPS_ERR_CHECK(bus_->writeByte(addr_, regAddr, data)))return DPS__FAIL_COMMUNICATION;
+    return DPS__SUCCEEDED;
+}
+/*! Write a sequence to data to a sequence of registers */
+inline dps_err_t DPS::writeBytes(uint8_t regAddr, size_t length, const uint8_t* data)
+{
+    if (DPS_ERR_CHECK(bus_->writeBytes(addr_, regAddr, length, data)))return DPS__FAIL_COMMUNICATION;
+    return DPS__SUCCEEDED;
+}
+/*! Write a value to register using masks*/
+inline dps_err_t DPS::writeByteBitfield(uint8_t regAddr, uint8_t mask, uint8_t shift, uint8_t data)
+{
+    uint8_t old_data;
+    dps_err_t ret = readByte(regAddr,&old_data);
+    if (ret != DPS__SUCCEEDED)return ret;
+    return writeByte(regAddr, ((uint8_t)old_data & ~mask) | ((data << shift) & mask));
+}
+inline dps_err_t DPS::writeByteBitfield(RegMask_t regMask, uint8_t data){
+    return writeByteBitfield(regMask.regAddress, regMask.mask, regMask.shift, data);
+}
 
 } // namespace dps
