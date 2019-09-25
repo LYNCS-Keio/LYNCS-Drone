@@ -97,7 +97,7 @@ dps_err_t DPS::startMeasureTempOnce(uint8_t oversamplingRate)
     //abort if device is not in idling mode
     if (m_opMode != IDLE)
     {
-    	return DPS__FAIL_TOOBUSY;
+    	return DPS__FAIL_TOO_BUSY;
     }
     if (oversamplingRate != m_tempOsr)
     {
@@ -126,7 +126,7 @@ dps_err_t DPS::startMeasurePressureOnce(uint8_t oversamplingRate)
 	//abort if device is not in idling mode
 	if (m_opMode != IDLE)
 	{
-		return DPS__FAIL_TOOBUSY;
+		return DPS__FAIL_TOO_BUSY;
 	}
 	//configuration of oversampling rate, lowest measure rate to avoid conflicts
 	if (oversamplingRate != m_prsOsr)
@@ -164,7 +164,7 @@ dps_err_t DPS::getSingleResult(float &result)
     	readByteBitfield(config_registers[PRS_RDY],&rdy);
     	break;
     default: //DPS310 not in command mode
-    	return DPS__FAIL_TOOBUSY;
+    	return DPS__FAIL_TOO_BUSY;
     }
     
     //read new measurement result
