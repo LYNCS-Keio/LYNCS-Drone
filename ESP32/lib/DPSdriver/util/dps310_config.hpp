@@ -1,6 +1,5 @@
 #pragma once
 #include "dps_register.hpp"
-constexpr uint8_t DPS310_NUM_OF_REGMASKS = 16;
 
 namespace dps310
 {
@@ -20,7 +19,7 @@ enum Registers_e
     INT_SEL,         //interrupt select
 };
 
-const RegMask_t registers[DPS310_NUM_OF_REGMASKS] = {
+const RegMask_t registers[] = {
     {0x0D, 0x0F, 0}, // PROD_ID
     {0x0D, 0xF0, 4}, // REV_ID
     {0x07, 0x80, 7}, // TEMP_SENSOR
