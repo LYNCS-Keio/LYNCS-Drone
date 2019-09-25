@@ -217,8 +217,7 @@ dps_err_t DPS::measureTempOnce(float &result, uint8_t oversamplingRate)
 	{
 		if (ret == DPS__FAIL_TOO_BUSY)
 		{
-			ret = standby();
-			return ret;
+			standby();
 		}
 		return ret;
 	}
@@ -268,8 +267,7 @@ dps_err_t DPS::measurePressureOnce(float &result, uint8_t oversamplingRate)
 	{
 		if (ret == DPS__FAIL_TOO_BUSY)
 		{
-			ret = standby();
-			return ret;
+			standby();
 		}
 		return ret;
 	}
