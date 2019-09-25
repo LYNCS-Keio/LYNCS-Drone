@@ -97,7 +97,7 @@ dps_err_t DPS::startMeasureTempOnce(uint8_t oversamplingRate)
     //abort if device is not in idling mode
     if (m_opMode != IDLE)
     {
-    	return DPS__FAIL_TOOBUSY;
+    	return DPS__FAIL_TOO_BUSY;
     }
     if (oversamplingRate != m_tempOsr)
     {
@@ -126,7 +126,7 @@ dps_err_t DPS::startMeasurePressureOnce(uint8_t oversamplingRate)
 	//abort if device is not in idling mode
 	if (m_opMode != IDLE)
 	{
-		return DPS__FAIL_TOOBUSY;
+		return DPS__FAIL_TOO_BUSY;
 	}
 	//configuration of oversampling rate, lowest measure rate to avoid conflicts
 	if (oversamplingRate != m_prsOsr)
@@ -164,7 +164,7 @@ dps_err_t DPS::getSingleResult(float &result)
     	readByteBitfield(config_registers[PRS_RDY],&rdy);
     	break;
     default: //DPS310 not in command mode
-    	return DPS__FAIL_TOOBUSY;
+    	return DPS__FAIL_TOO_BUSY;
     }
     
     //read new measurement result
@@ -195,11 +195,10 @@ return DPS__FAIL_UNKNOWN;
 
 dps_err_t DPS::getRawResult(int32_t *raw, RegBlock_t reg)
 {
-    uint8_t buffer[DPS__RESULT_BLOCK_LENGTH] = {0};
-	dps_err_t ret = readBlock(reg, buffer);
+	dps_err_t ret = readBlock(reg, buffer_);
     if (ret != DPS__SUCCEEDED)return ret;
 
-    *raw = (uint32_t)buffer[0] << 16 | (uint32_t)buffer[1] << 8 | (uint32_t)buffer[2];
+    *raw = (uint32_t)buffer_[0] << 16 | (uint32_t)buffer_[1] << 8 | (uint32_t)buffer_[2];
     *raw = convert_complement<int32_t,24>(*raw);
     return DPS__SUCCEEDED;
 }
@@ -216,6 +215,10 @@ dps_err_t DPS::measureTempOnce(float &result, uint8_t oversamplingRate)
 	dps_err_t ret = startMeasureTempOnce(oversamplingRate);
 	if (ret != DPS__SUCCEEDED)
 	{
+		if (ret == DPS__FAIL_TOO_BUSY)
+		{
+			standby();
+		}
 		return ret;
 	}
 	//wait until measurement is finished
@@ -262,6 +265,10 @@ dps_err_t DPS::measurePressureOnce(float &result, uint8_t oversamplingRate)
 	dps_err_t ret = startMeasurePressureOnce(oversamplingRate);
 	if (ret != DPS__SUCCEEDED)
 	{
+		if (ret == DPS__FAIL_TOO_BUSY)
+		{
+			standby();
+		}
 		return ret;
 	}
 	//wait until measurement is finished
