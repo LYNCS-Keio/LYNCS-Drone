@@ -195,11 +195,10 @@ return DPS__FAIL_UNKNOWN;
 
 dps_err_t DPS::getRawResult(int32_t *raw, RegBlock_t reg)
 {
-    uint8_t buffer[DPS__RESULT_BLOCK_LENGTH] = {0};
-	dps_err_t ret = readBlock(reg, buffer);
+	dps_err_t ret = readBlock(reg, buffer_);
     if (ret != DPS__SUCCEEDED)return ret;
 
-    *raw = (uint32_t)buffer[0] << 16 | (uint32_t)buffer[1] << 8 | (uint32_t)buffer[2];
+    *raw = (uint32_t)buffer_[0] << 16 | (uint32_t)buffer_[1] << 8 | (uint32_t)buffer_[2];
     *raw = convert_complement<int32_t,24>(*raw);
     return DPS__SUCCEEDED;
 }
