@@ -78,10 +78,13 @@ class DPS
     DPS(){}
 
     public:
-    DPS(dps_bus_t *bus) : bus_{bus}, buffer_{0}
+    DPS(dps_bus_t *bus) : bus_{bus}, m_dev_init_(false), buffer_{0}
     {}
 
-    ~DPS();
+    ~DPS()
+    {
+        bus_->removeDevice(addr_);
+    }
 
     /**
      * @brief SPIbus initialization
@@ -91,11 +94,7 @@ class DPS
      * @param cs_io_num         [ChipSelect/SlaveSelect pin]
      * @return dps_err_t        [error code]
      */
-    dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num)
-    {
-        if (DPS_ERR_CHECK(bus_->addDevice(spi_mode, clock_speed_hz, cs_io_num, &addr_)))return DPS__FAIL_COMMUNICATION;
-        return DPS__SUCCEEDED;
-    }
+    dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num);
     
     //! \name Read / Write
     //! Functions to perform direct read or write operation(s) to registers.
