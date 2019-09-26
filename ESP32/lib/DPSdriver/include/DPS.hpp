@@ -39,7 +39,8 @@ class DPS
     /** Communication bus pointer, I2C / SPI */
     dps_bus_t* bus_;
     dps_addr_handle_t addr_;
-    Mode m_opMode;
+    Mode m_opMode_;
+    bool m_dev_init_;
 
     protected:
     static const int32_t scaling_facts[];
@@ -49,13 +50,13 @@ class DPS
     dps_err_t disableFIFO();
     dps_err_t standby();
     /** Temperature measurement rate*/
-    uint8_t m_tempMr;
+    uint8_t m_tempMr_;
     /** Temperature oversampling rate*/
-    uint8_t m_tempOsr;
+    uint8_t m_tempOsr_;
     /** Pressure measurement rate*/
-    uint8_t m_prsMr;
+    uint8_t m_prsMr_;
     /** Pressure oversampling rate*/
-    uint8_t m_prsOsr;
+    uint8_t m_prsOsr_;
     dps_err_t startMeasureTempOnce(uint8_t oversamplingRate);
     dps_err_t startMeasureTempOnce();
     dps_err_t startMeasurePressureOnce(uint8_t oversamplingRate);
@@ -72,10 +73,9 @@ class DPS
     virtual dps_err_t configTemp(uint8_t tempMr, uint8_t tempOsr);
     virtual dps_err_t configPressure(uint8_t prs_mr, uint8_t prs_osr);
     //flags
-	uint8_t m_initFail;
-	uint8_t m_productID;
-	uint8_t m_revisionID;
-    DPS(){}
+	uint8_t m_initFail_;
+	uint8_t m_productID_;
+	uint8_t m_revisionID_;
 
     public:
     DPS(dps_bus_t *bus) : bus_{bus}, m_dev_init_(false), buffer_{0}
