@@ -94,7 +94,16 @@ class DPS
      * @param cs_io_num         [ChipSelect/SlaveSelect pin]
      * @return dps_err_t        [error code]
      */
-    dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num);
+    dps_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num)
+    {
+        if (m_dev_init_)
+        {
+            bus_->removeDevice(addr_);
+        }
+        if (DPS_ERR_CHECK(bus_->addDevice(spi_mode, clock_speed_hz, cs_io_num, &addr_)))return DPS__FAIL_COMMUNICATION;
+        m_dev_init_ = true;
+        return DPS__SUCCEEDED;
+    }
     
     //! \name Read / Write
     //! Functions to perform direct read or write operation(s) to registers.
