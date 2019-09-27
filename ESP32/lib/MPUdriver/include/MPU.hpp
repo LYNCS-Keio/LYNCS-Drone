@@ -24,7 +24,7 @@ namespace mpu
     uint8_t buffer_[16];
 
     public:
-    MPU(mpu_bus_t& bus);
+    MPU(mpu_bus_t* bus);
     ~MPU();
     virtual mpu_err_t initialize() = 0;
 
