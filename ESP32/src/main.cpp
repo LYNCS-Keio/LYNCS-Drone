@@ -27,11 +27,11 @@
 #define DPS_SCLK_PIN    18
 #define DPS_CS_PIN      14
 
+#define MPU_MISO_PIN    19
+#define MPU_MOSI_PIN    23
+#define MPU_SCLK_PIN    18
+#define MPU_CS_PIN      5
 
-#define MISO_PIN    19
-#define MOSI_PIN    23
-#define SCLK_PIN    18
-#define CS_PIN      14
 
 extern "C" void app_main()
 {
