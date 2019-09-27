@@ -19,13 +19,16 @@
 #include "esp_err.h"
 #include "math.h"
 
-#define DPS_SPI_CLOCK   10000000  // 10 MHz
+#define DPS_SPI_CLOCK   10000000    // 10 MHz
 #define DPS_SPI_MODE    3
 
 #define DPS_MISO_PIN    19
 #define DPS_MOSI_PIN    23
 #define DPS_SCLK_PIN    18
 #define DPS_CS_PIN      14
+
+#define MPU_SPI_CLOCK   1000000     // 1 MHz
+#define MPU_SPI_MODE    3
 
 #define MPU_MISO_PIN    19
 #define MPU_MOSI_PIN    23
