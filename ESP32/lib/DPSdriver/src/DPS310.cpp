@@ -17,7 +17,7 @@ static inline int convert_complement(uint_type num){
 namespace dps310
 {
 
-    DPS310::DPS310(dps_bus_t *bus, int cs_pin_num) : DPS(bus),
+    DPS310::DPS310(dps_bus_t *bus) : DPS(bus),
     tmp_over_sampling_rate_(1),
     prs_over_sampling_rate_(1)
     {
@@ -27,23 +27,23 @@ namespace dps310
         return writeByteBitfield(registers[FIFO_FL],1U);
     }
     dps_err_t DPS310::initiarize(){
-        dps_err_t ret = readByteBitfield(registers[PROD_ID], &m_productID);
+        dps_err_t ret = readByteBitfield(registers[PROD_ID], &m_productID_);
         if (ret != DPS__SUCCEEDED)
         {
-            m_initFail = 1U;
+            m_initFail_ = 1U;
             return ret;
         }
-        ret = readByteBitfield(registers[REV_ID], &m_revisionID);
+        ret = readByteBitfield(registers[REV_ID], &m_revisionID_);
         if (ret != DPS__SUCCEEDED)
         {
-            m_initFail = 1U;
+            m_initFail_ = 1U;
             return ret;
         }
         //find out which temperature sensor is calibrated with coefficients...
         ret = readByteBitfield(registers[TEMP_SENSORREC], &m_tempSensor_);
 	    if (ret != DPS__SUCCEEDED)
         {
-            m_initFail = 1U;
+            m_initFail_ = 1U;
             return ret;
         }
 
@@ -51,7 +51,7 @@ namespace dps310
         ret = writeByteBitfield(registers[TEMP_SENSOR],m_tempSensor_);
         if (ret != DPS__SUCCEEDED)
         {
-		    m_initFail = 1U;
+		    m_initFail_ = 1U;
             return ret;
         }
 
@@ -59,7 +59,7 @@ namespace dps310
         ret = readcoeffs();
 	    if (ret != DPS__SUCCEEDED)
 	    {
-	    	m_initFail = 1U;
+	    	m_initFail_ = 1U;
             return ret;
 	    }
         //set to standby for further configuration
@@ -67,12 +67,12 @@ namespace dps310
 	    //set measurement precision and rate to standard values;
         if (configTemp(DPS__MEASUREMENT_RATE_4, tmp_over_sampling_rate_) != DPS__SUCCEEDED)
         {
-	    	m_initFail = 1U;
+	    	m_initFail_ = 1U;
             return DPS__FAIL_INIT_FAILED;
         }
         if (configPressure(DPS__MEASUREMENT_RATE_4, prs_over_sampling_rate_) != DPS__SUCCEEDED)
         {
-	    	m_initFail = 1U;
+	    	m_initFail_ = 1U;
             return DPS__FAIL_INIT_FAILED;
         }
         
@@ -87,7 +87,7 @@ namespace dps310
         // Fix IC with a fuse bit problem, which lead to a wrong temperature
 	    // Should not affect ICs without this problem
 	    correctTemp();
-        m_initFail = 0U;
+        m_initFail_ = 0U;
         return DPS__SUCCEEDED;
 	}
     dps_err_t DPS310::configTemp(uint8_t tempMr, uint8_t tempOsr)
@@ -162,7 +162,7 @@ namespace dps310
         float temp = raw;
 
 	    //scale temperature according to scaling table and oversampling
-	    temp /= scaling_facts[m_tempOsr];
+	    temp /= scaling_facts[m_tempOsr_];
 
 	    //update last measured temperature
 	    //it will be used for pressure compensation
@@ -179,7 +179,7 @@ namespace dps310
         float prs = raw;
 
 	    //scale pressure according to scaling table and oversampling
-	    prs /= scaling_facts[m_prsOsr];
+	    prs /= scaling_facts[m_prsOsr_];
 
 	    //Calculate compensated pressure
 	    prs = m_c00_ + prs * (m_c10_ + prs * (m_c20_ + prs * m_c30_)) + m_lastTempScal_ * (m_c01_ + prs * (m_c11_ + prs * m_c21_));

@@ -22,17 +22,23 @@ namespace dps
 
 const int32_t DPS::scaling_facts[] = {524288, 1572864, 3670016, 7864320, 253952, 516096, 1040384, 2088960};
 
-DPS::~DPS()
+dps_err_t DPS::dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num)
 {
-    bus_->removeDevice(addr_);
-}    
+    if (m_dev_init_)
+    {
+        bus_->removeDevice(addr_);
+    }
+    if (DPS_ERR_CHECK(bus_->addDevice(spi_mode, clock_speed_hz, cs_io_num, &addr_)))return DPS__FAIL_COMMUNICATION;
+    m_dev_init_ = true;
+    return DPS__SUCCEEDED;
+}
 
 dps_err_t DPS::setOpMode(Mode opMode)
 {
     if (DPS_ERR_CHECK(writeByteBitfield(config_registers[MSR_CTRL], opMode))){
         return DPS__FAIL_UNKNOWN;
     }
-    m_opMode = (Mode)opMode;
+    m_opMode_ = (Mode)opMode;
     return DPS__SUCCEEDED;
 }
 
@@ -49,7 +55,7 @@ dps_err_t DPS::disableFIFO()
 dps_err_t DPS::standby()
 {
     //abort if initialization failed
-    if (m_initFail)
+    if (m_initFail_)
     {
     	return DPS__FAIL_INIT_FAILED;
     }
@@ -69,9 +75,9 @@ dps_err_t DPS::configTemp(uint8_t tempMr, uint8_t tempOsr)
     tempOsr &= 0x07;
     // two accesses to the same register; for readability
     if (DPS_ERR_CHECK(writeByteBitfield(config_registers[TEMP_MR], tempMr)))return DPS__FAIL_UNKNOWN;
+    m_tempMr_ = tempMr;
     if (DPS_ERR_CHECK(writeByteBitfield(config_registers[TEMP_OSR], tempOsr)))return DPS__FAIL_UNKNOWN;
-    m_tempMr = tempMr;
-    m_tempOsr = tempOsr;
+    m_tempOsr_ = tempOsr;
     return DPS__SUCCEEDED;
 }
 
@@ -82,24 +88,24 @@ dps_err_t DPS::configPressure(uint8_t prsMr, uint8_t prsOsr)
     //abort immediately on fail
     if (DPS_ERR_CHECK(writeByteBitfield(config_registers[PRS_MR], prsMr)))return DPS__FAIL_UNKNOWN;
     if (DPS_ERR_CHECK(writeByteBitfield(config_registers[PRS_OSR], prsOsr)))return DPS__FAIL_UNKNOWN;
-    m_prsMr = prsMr;
-    m_prsOsr = prsOsr;
+    m_prsMr_ = prsMr;
+    m_prsOsr_ = prsOsr;
     return DPS__SUCCEEDED;
 }
 
 dps_err_t DPS::startMeasureTempOnce(uint8_t oversamplingRate)
 {
     //abort if initialization failed
-    if (m_initFail)
+    if (m_initFail_)
     {
     	return DPS__FAIL_INIT_FAILED;
     }
     //abort if device is not in idling mode
-    if (m_opMode != IDLE)
+    if (m_opMode_ != IDLE)
     {
     	return DPS__FAIL_TOO_BUSY;
     }
-    if (oversamplingRate != m_tempOsr)
+    if (oversamplingRate != m_tempOsr_)
     {
     	//configuration of oversampling rate
     	if (configTemp(0U, oversamplingRate) != DPS__SUCCEEDED)
@@ -113,23 +119,23 @@ dps_err_t DPS::startMeasureTempOnce(uint8_t oversamplingRate)
 
 dps_err_t DPS::startMeasureTempOnce()
 {
-	return startMeasureTempOnce(m_tempOsr);
+	return startMeasureTempOnce(m_tempOsr_);
 }
 
 dps_err_t DPS::startMeasurePressureOnce(uint8_t oversamplingRate)
 {
 	//abort if initialization failed
-	if (m_initFail)
+	if (m_initFail_)
 	{
 		return DPS__FAIL_INIT_FAILED;
 	}
 	//abort if device is not in idling mode
-	if (m_opMode != IDLE)
+	if (m_opMode_ != IDLE)
 	{
 		return DPS__FAIL_TOO_BUSY;
 	}
 	//configuration of oversampling rate, lowest measure rate to avoid conflicts
-	if (oversamplingRate != m_prsOsr)
+	if (oversamplingRate != m_prsOsr_)
 	{
 		if (configPressure(0U, oversamplingRate))
 		{
@@ -142,20 +148,20 @@ dps_err_t DPS::startMeasurePressureOnce(uint8_t oversamplingRate)
 
 dps_err_t DPS::startMeasurePressureOnce()
 {
-	return startMeasurePressureOnce(m_prsOsr);
+	return startMeasurePressureOnce(m_prsOsr_);
 }
 
 dps_err_t DPS::getSingleResult(float &result)
 {
     //abort if initialization failed
-    if (m_initFail)
+    if (m_initFail_)
     {
     	return DPS__FAIL_INIT_FAILED;
     }
 
     //read finished bit for current opMode
     uint8_t rdy;
-    switch (m_opMode)
+    switch (m_opMode_)
     {
     case CMD_TEMP: //temperature
     	readByteBitfield(config_registers[TEMP_RDY],&rdy);
@@ -173,8 +179,8 @@ dps_err_t DPS::getSingleResult(float &result)
     case 0: //ready flag not set, measurement still in progress
     	return DPS__FAIL_UNFINISHED;
     case 1: //measurement ready, expected case
-    	Mode oldMode = m_opMode;
-    	m_opMode = IDLE; //opcode was automatically reseted by DPS310
+    	Mode oldMode = m_opMode_;
+    	m_opMode_ = IDLE; //opcode was automatically reseted by DPS310
     	int32_t raw_val;
     	switch (oldMode)
     	{
@@ -222,7 +228,7 @@ dps_err_t DPS::measureTempOnce(float &result, uint8_t oversamplingRate)
 		return ret;
 	}
 	//wait until measurement is finished
-	ets_delay_us(1000*calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
+	ets_delay_us(1000*calcBusyTime(0U, m_tempOsr_) / DPS__BUSYTIME_SCALING);
 	//sampling interval must be over 10ms when using DPS310
 	ets_delay_us(1000*DPS310__BUSYTIME_FAILSAFE);
 
@@ -236,12 +242,12 @@ dps_err_t DPS::measureTempOnce(float &result, uint8_t oversamplingRate)
 
 dps_err_t DPS::measureTempOnce(float &result)
 {
-	return measureTempOnce(result, m_tempOsr);
+	return measureTempOnce(result, m_tempOsr_);
 }
 
 dps_err_t DPS::correctTemp()
 {
-	if (m_initFail)
+	if (m_initFail_)
 	{
 		return DPS__FAIL_INIT_FAILED;
 	}
@@ -272,7 +278,7 @@ dps_err_t DPS::measurePressureOnce(float &result, uint8_t oversamplingRate)
 		return ret;
 	}
 	//wait until measurement is finished
-	ets_delay_us(1000*calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
+	ets_delay_us(1000*calcBusyTime(0U, m_tempOsr_) / DPS__BUSYTIME_SCALING);
 	//sampling interval must be over 10ms when using DPS310
 	ets_delay_us(1000*DPS310__BUSYTIME_FAILSAFE);
 
@@ -286,7 +292,7 @@ dps_err_t DPS::measurePressureOnce(float &result, uint8_t oversamplingRate)
 
 dps_err_t DPS::measurePressureOnce(float &result)
 {
-	return measurePressureOnce(result, m_prsOsr);
+	return measurePressureOnce(result, m_prsOsr_);
 }
 
 dps_err_t DPS::measureHeightOnce(float &result, uint8_t oversamplingrRate)

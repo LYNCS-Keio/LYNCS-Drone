@@ -36,7 +36,7 @@ namespace dps310
 	dps_err_t configPressure(uint8_t prsMr, uint8_t prsOsr) override;
 
 	public:
-	DPS310(dps_bus_t *bus, int cs_pin_num);
+	DPS310(dps_bus_t *bus);
 	~DPS310(){};
 	void setTmpOversamplingRate(uint8_t over_sampling_rate){tmp_over_sampling_rate_ = over_sampling_rate;}
 	void setPrsOversamplingRate(uint8_t over_sampling_rate){prs_over_sampling_rate_ = over_sampling_rate;}
