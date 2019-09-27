@@ -6,5 +6,6 @@ namespace mpu
 
     MPU::~MPU()
     {
+        bus_->removeDevice(addr_);
     }
 } // namespace mpu
