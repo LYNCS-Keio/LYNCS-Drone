@@ -17,6 +17,7 @@ namespace mpu
     private:
     mpu_bus_t* bus_;         /*!< Communication bus pointer, I2C / SPI */
     mpu_addr_handle_t addr_;
+    bool m_dev_init_;
 
     protected:
 
@@ -38,7 +39,13 @@ namespace mpu
      */
     mpu_err_t dev_init(uint8_t spi_mode, uint32_t clock_speed_hz, int cs_io_num)
     {
+        if (m_dev_init_)
+        {
+            bus_->removeDevice(addr_);
+        }
+        
         if (MPU_ERR_CHECK(bus_->addDevice(spi_mode, clock_speed_hz, cs_io_num, &addr_)))return MPU__FAIL_COMMUNICATION;
+        m_dev_init_ = true;
         return MPU__SUCCEEDED;
     }
     //! \name Read / Write
