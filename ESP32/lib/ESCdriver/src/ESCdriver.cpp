@@ -1,5 +1,6 @@
 #include "ESCdriver.hpp"
-
+namespace esc
+{
 
 ESCdriver::ESCdriver(){}
 
@@ -60,3 +61,5 @@ int ESCdriver::setDuty_in_us(int pin, int width)
     return(0);
 
 }
+
+} // namespace esc

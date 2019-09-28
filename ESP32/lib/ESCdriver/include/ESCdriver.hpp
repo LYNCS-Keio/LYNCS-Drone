@@ -6,6 +6,9 @@
 #include <esp_err.h>
 #include <driver/mcpwm.h>
 
+namespace esc
+{
+
 
 constexpr std::array<mcpwm_unit_t, 2> unit_array{MCPWM_UNIT_0, MCPWM_UNIT_1};
 constexpr std::array<mcpwm_io_signals_t, 6> signal_array{MCPWM0A, MCPWM0B, MCPWM1A, MCPWM1B, MCPWM2A, MCPWM2B};
@@ -35,3 +38,5 @@ class ESCdriver
     int i = 0;
     
 };
+
+} // namespace esc

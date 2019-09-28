@@ -69,8 +69,8 @@ extern "C" void app_main()
     conf.duty_mode = MCPWM_DUTY_MODE_0;
     conf.counter_mode = MCPWM_UP_COUNTER;
     
-    ESCdriver esc;              //ここをコメントアウトすると動く
-    esc.initialize(pins, conf);  //ここも
+    esc::ESCdriver myESC;
+    myESC.initialize(pins, conf);
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while (1)
