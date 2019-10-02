@@ -9,11 +9,30 @@ namespace mpu
         MPU__SUCCEEDED = 0,
         MPU__FAIL_UNKNOWN = -1,
         MPU__FAIL_INIT_FAILED = -2,
-        MPU__FAIL_COMMUNICATION = -3
+    MPU__FAIL_COMMUNICATION = -3,
+    MPU__FAIL_WRONG_DEVICE = -4
+};
+
+enum GYRO_FS
+{
+    GYRO_FS_SEL_250DPS = 0,
+    GYRO_FS_SEL_500DPS,
+    GYRO_FS_SEL_1000DPS,
+    GYRO_FS_SEL_2000DPS
+};
+
+const int32_t gyro_full_scale[] = 
+{
+    250,
+    500,
+    1000,
+    2000
     };
+
     enum Config_Registers_e
     {
-        MPU__WHO_AM_I = 0,
+    GYRO_FS_SEL = 0,
+    WHO_AM_I,
         BYPASS_EN,
         H_RESET,
         SLEEP,
@@ -23,6 +42,7 @@ namespace mpu
         CLKSEL
     };
     const RegMask_t registers[] = {
+    {0x1B, 0x18, 3},    //GYRO_FS_SEL
         {0x75, 0xFF, 0},    //WHO_AM_I
         {0x37, 0x02, 1},    //BYPASS_EN        
         {0x6B, 0x80, 7},    //H_RESET

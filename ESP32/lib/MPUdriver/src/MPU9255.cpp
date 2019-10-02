@@ -12,7 +12,7 @@ MPU9255::~MPU9255()
 }
 
 mpu_err_t MPU9255::initialize(){
-    mpu_err_t ret = readByte(registers[MPU__WHO_AM_I], buffer_);
+    mpu_err_t ret = readByteBitfield(registers[WHO_AM_I], buffer_);
     if (buffer_[0] != 0x73) return MPU__FAIL_WRONG_DEVICE;
     
     //initialize PWR_MGMT_1
@@ -38,6 +38,17 @@ mpu_err_t MPU9255::initialize(){
     ret = writeByteBitfield(registers[BYPASS_EN], 1U);
     if (ret != MPU__SUCCEEDED)return ret;
 
+    //initialize GYRO_FS_SEL
+    setGyroFullScaleSelect(GYRO_FS_SEL_250DPS);
+
+    return MPU__SUCCEEDED;
+}
+
+mpu_err_t MPU9255::setGyroFullScaleSelect(GYRO_FS gyro_fs_sel)
+{
+    mpu_err_t ret = writeByteBitfield(registers[GYRO_FS_SEL], gyro_fs_sel);
+    if (ret != MPU__SUCCEEDED)return ret;
+    m_gyro_fs_sel_ = gyro_fs_sel;
     return MPU__SUCCEEDED;
 }
 
