@@ -12,8 +12,11 @@ MPU9255::~MPU9255()
 }
 
 mpu_err_t MPU9255::initialize(){
+    mpu_err_t ret = readByte(registers[MPU__WHO_AM_I], buffer_);
+    if (buffer_[0] != 0x73) return MPU__FAIL_WRONG_DEVICE;
+    
     //initialize PWR_MGMT_1
-    mpu_err_t ret = writeByteBitfield(registers[H_RESET],0U);
+    ret = writeByteBitfield(registers[H_RESET],0U);
     if (ret != MPU__SUCCEEDED)return ret;
 
     ret = writeByteBitfield(registers[SLEEP], 0U);
