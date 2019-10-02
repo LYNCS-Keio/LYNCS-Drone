@@ -8,15 +8,17 @@
 // For the license information refer to LICENSE file in root directory.
 // =========================================================================
 
-#include <stdio.h>
+#include <cstdio>
+#include <vector>
 #include "SPIbus.hpp"
 #include "DPS.hpp"
 #include "DPS310.hpp"
+#include "ESCdriver.hpp"
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_err.h"
-#include "math.h"
 
 #define SPI_CLOCK   10000000  // 10 MHz
 #define SPI_MODE    3
@@ -25,6 +27,11 @@
 #define MOSI_PIN    23
 #define SCLK_PIN    18
 #define CS_PIN      14
+
+#define PWM_1 15
+#define PWM_2 4
+#define PWM_3 16
+#define PWM_4 17
 
 extern "C" void app_main()
 {
@@ -52,6 +59,18 @@ extern "C" void app_main()
     {
         return;
     }
+    
+    std::vector<int> pins{PWM_1, PWM_2, PWM_3, PWM_4};
+
+    mcpwm_config_t conf;
+    conf.frequency = 50;
+    conf.cmpr_a = 0;
+    conf.cmpr_b = 0;
+    conf.duty_mode = MCPWM_DUTY_MODE_0;
+    conf.counter_mode = MCPWM_UP_COUNTER;
+    
+    esc::ESCdriver myESC;
+    myESC.initialize(pins, conf);
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while (1)
