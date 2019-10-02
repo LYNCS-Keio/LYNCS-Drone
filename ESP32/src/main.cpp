@@ -53,6 +53,9 @@ extern "C" void app_main()
     
     dps310::DPS310 myDPS(&mySPI);
     myDPS.dev_init(DPS_SPI_MODE,DPS_SPI_CLOCK,DPS_CS_PIN);
+    mpu9255::MPU9255 myMPU(&mySPI);
+    myMPU.dev_init(MPU_SPI_MODE,MPU_SPI_CLOCK, MPU_CS_PIN);
+
     myDPS.setTmpOversamplingRate(1);
     myDPS.setPrsOversamplingRate(1);
 
@@ -70,7 +73,9 @@ extern "C" void app_main()
         dps::dps_err_t ret;
         ret = myDPS.measureHeightOnce(H, 1);
         printf("H= %f meter ret = %d\n",H, ret);
-
+        uint8_t WAI;
+        myMPU.readByte(0x75, &WAI);
+        printf("Who Am I=%x\n", WAI);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
