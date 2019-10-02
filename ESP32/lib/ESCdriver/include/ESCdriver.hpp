@@ -35,7 +35,6 @@ class ESCdriver
 
     private:
     std::unordered_map<int, pinInfo> pinconf;
-    int i = 0;
     
 };
 
