@@ -10,6 +10,7 @@ namespace mpu9255
     public:
         MPU9255(mpu_bus_t* bus);
         ~MPU9255();
+        mpu_err_t initialize();
     };
     
 } // namespace mpu9255
