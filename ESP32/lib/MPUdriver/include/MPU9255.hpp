@@ -7,12 +7,12 @@ namespace mpu9255
     {
     private:
     GYRO_FS m_gyro_fs_sel_;
-    mpu_err_t setGyroFullScaleSelect(GYRO_FS gyro_fs_sel);
 
     public:
         MPU9255(mpu_bus_t* bus);
         ~MPU9255();
         mpu_err_t initialize();
+    mpu_err_t setGyroFullScaleSelect(GYRO_FS gyro_fs_sel);
     };
     
 } // namespace mpu9255
