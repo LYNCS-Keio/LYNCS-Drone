@@ -75,7 +75,6 @@ extern "C" void app_main()
         dps::dps_err_t ret;
         ret = myDPS.measureHeightOnce(H, 1);
         printf("H= %f meter ret = %d\n",H, ret);
-        //uint8_t WAI;
         float Gyro[3];
         myMPU.measureGyro(Gyro);
         printf("%f\n",Gyro[0]);

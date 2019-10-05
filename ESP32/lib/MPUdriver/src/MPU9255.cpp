@@ -3,6 +3,21 @@
 
 namespace mpu9255
 {
+
+/**
+ * @brief convert 2´s complement numbers into signed integer numbers.
+ * 
+ */
+template<class uint_type,unsigned int N>
+static inline int convert_complement(uint_type num){
+    int t = num;
+    if (num & (1 << (N-1)))
+    {
+        t = -(~(num - 1) & ((1 << N) - 1));
+    }
+    return t;
+}
+
 using namespace mpu;
 MPU9255::MPU9255(mpu_bus_t* bus) : MPU(bus)
 {
@@ -40,8 +55,7 @@ mpu_err_t MPU9255::initialize(){
     if (ret != MPU__SUCCEEDED)return ret;
 
     //initialize GYRO_FS_SEL
-    setGyroFullScaleSelect(GYRO_FS_SEL_250DPS);
-
+    setGyroFullScaleSelect(GYRO_FS_SEL_1000DPS);
     return MPU__SUCCEEDED;
 }
 
@@ -57,14 +71,14 @@ mpu_err_t MPU9255::measureGyro(float result[3])
 {
     mpu_err_t ret = readBlock(registerBlocks[GYRO], buffer_);
     if (ret != MPU__SUCCEEDED)return ret;
-    float g_raw[3] = {0};
+    uint16_t g_raw[3] = {0};
     g_raw[0] = ((buffer_[0] << 8) | (buffer_[1])) - (1 << 16);
     g_raw[1] = ((buffer_[2] << 8) | (buffer_[3])) - (1 << 16);
     g_raw[2] = ((buffer_[4] << 8) | (buffer_[5])) - (1 << 16);
 
-    result[0] = ((float)(g_raw[0])/(1 << 15))*gyro_full_scale[m_gyro_fs_sel_];
-    result[1] = ((float)(g_raw[1])/(1 << 15))*gyro_full_scale[m_gyro_fs_sel_];
-    result[2] = ((float)(g_raw[2])/(1 << 15))*gyro_full_scale[m_gyro_fs_sel_];
+    result[0] = ((float)(convert_complement<uint16_t, 16>(g_raw[0]))/(1 << 15)) * gyro_full_scale[m_gyro_fs_sel_];
+    result[1] = ((float)(convert_complement<uint16_t, 16>(g_raw[1]))/(1 << 15)) * gyro_full_scale[m_gyro_fs_sel_];
+    result[2] = ((float)(convert_complement<uint16_t, 16>(g_raw[2]))/(1 << 15)) * gyro_full_scale[m_gyro_fs_sel_];
     return MPU__SUCCEEDED;
 }
 
