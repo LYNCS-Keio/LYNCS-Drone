@@ -94,4 +94,19 @@ mpu_err_t MPU9255::measureGyro(float result[3])
     return MPU__SUCCEEDED;
 }
 
+mpu_err_t MPU9255::measureAccel(float result[3])
+{
+    mpu_err_t ret = readBlock(registerBlocks[ACCEL], buffer_);
+    if (ret != MPU__SUCCEEDED)return ret;
+    uint16_t a_raw[3] = {0};
+    a_raw[0] = ((buffer_[0] << 8) | (buffer_[1]));
+    a_raw[1] = ((buffer_[2] << 8) | (buffer_[3]));
+    a_raw[2] = ((buffer_[4] << 8) | (buffer_[5]));
+
+    result[0] = ((float)(convert_complement<uint16_t, 16>(a_raw[0]))/(1 << 15)) * accel_full_scale[m_accel_fs_sel_];
+    result[1] = ((float)(convert_complement<uint16_t, 16>(a_raw[1]))/(1 << 15)) * accel_full_scale[m_accel_fs_sel_];
+    result[2] = ((float)(convert_complement<uint16_t, 16>(a_raw[2]))/(1 << 15)) * accel_full_scale[m_accel_fs_sel_];
+    return MPU__SUCCEEDED;
+}
+
 } // namespace mpu9255

@@ -77,11 +77,15 @@ extern "C" void app_main()
         printf("H= %f meter ret = %d\n",H, ret);
         float Gyro[3];
         myMPU.measureGyro(Gyro);
-        printf("%f\n",Gyro[0]);
-        printf("%f\n",Gyro[1]);
-        printf("%f\n",Gyro[2]);
-        //printf("GyroY= %f\n",Gyro[1]);
-        //printf("GyroZ= %f\n",Gyro[2]);
+        printf("Gyro_x=%f\n",Gyro[0]);
+        printf("Gyro_y=%f\n",Gyro[1]);
+        printf("Gyro_z=%f\n",Gyro[2]);
+
+        float Accel[3];
+        myMPU.measureAccel(Accel);
+        printf("Accel_x=%f\n",Accel[0]);
+        printf("Accel_y=%f\n",Accel[1]);
+        printf("Accel_z=%f\n",Accel[2]);
         vTaskDelay(100
          / portTICK_PERIOD_MS);
     }
