@@ -1,5 +1,6 @@
 #include "MPU9255.hpp"
 #include "../util/mpu_const.hpp"
+
 namespace mpu9255
 {
 using namespace mpu;
@@ -14,7 +15,7 @@ MPU9255::~MPU9255()
 mpu_err_t MPU9255::initialize(){
     mpu_err_t ret = readByteBitfield(registers[WHO_AM_I], buffer_);
     if (buffer_[0] != 0x73) return MPU__FAIL_WRONG_DEVICE;
-    
+
     //initialize PWR_MGMT_1
     ret = writeByteBitfield(registers[H_RESET],0U);
     if (ret != MPU__SUCCEEDED)return ret;
@@ -52,5 +53,19 @@ mpu_err_t MPU9255::setGyroFullScaleSelect(GYRO_FS gyro_fs_sel)
     return MPU__SUCCEEDED;
 }
 
+mpu_err_t MPU9255::measureGyro(float result[3])
+{
+    mpu_err_t ret = readBlock(registerBlocks[GYRO], buffer_);
+    if (ret != MPU__SUCCEEDED)return ret;
+    float g_raw[3] = {0};
+    g_raw[0] = ((buffer_[0] << 8) | (buffer_[1])) - (1 << 16);
+    g_raw[1] = ((buffer_[2] << 8) | (buffer_[3])) - (1 << 16);
+    g_raw[2] = ((buffer_[4] << 8) | (buffer_[5])) - (1 << 16);
+
+    result[0] = ((float)(g_raw[0])/(1 << 15))*gyro_full_scale[m_gyro_fs_sel_];
+    result[1] = ((float)(g_raw[1])/(1 << 15))*gyro_full_scale[m_gyro_fs_sel_];
+    result[2] = ((float)(g_raw[2])/(1 << 15))*gyro_full_scale[m_gyro_fs_sel_];
+    return MPU__SUCCEEDED;
+}
 
 } // namespace mpu9255

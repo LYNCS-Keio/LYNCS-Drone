@@ -9,10 +9,17 @@ namespace mpu9255
     GYRO_FS m_gyro_fs_sel_;
 
     public:
-        MPU9255(mpu_bus_t* bus);
-        ~MPU9255();
-        mpu_err_t initialize();
+    MPU9255(mpu_bus_t* bus);
+    ~MPU9255();
+    mpu_err_t initialize();
+    /**
+     * @brief Set the Gyro Full Scale Select object
+     * 
+     * @param gyro_fs_sel 
+     * @return mpu_err_t 
+     */
     mpu_err_t setGyroFullScaleSelect(GYRO_FS gyro_fs_sel);
+    mpu_err_t measureGyro(float result[3]);
     };
     
 } // namespace mpu9255

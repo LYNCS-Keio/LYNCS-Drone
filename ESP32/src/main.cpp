@@ -27,7 +27,7 @@
 #define DPS_SCLK_PIN    18
 #define DPS_CS_PIN      14
 
-#define MPU_SPI_CLOCK   1000000     // 1 MHz
+#define MPU_SPI_CLOCK   100000     // 100 kHz
 #define MPU_SPI_MODE    3
 
 #define MPU_MISO_PIN    19
@@ -66,6 +66,8 @@ extern "C" void app_main()
         return;
     }
 
+    myMPU.initialize();
+
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while (1)
     {
@@ -73,9 +75,15 @@ extern "C" void app_main()
         dps::dps_err_t ret;
         ret = myDPS.measureHeightOnce(H, 1);
         printf("H= %f meter ret = %d\n",H, ret);
-        uint8_t WAI;
-        myMPU.readByte(0x75, &WAI);
-        printf("Who Am I=%x\n", WAI);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        //uint8_t WAI;
+        float Gyro[3];
+        myMPU.measureGyro(Gyro);
+        printf("%f\n",Gyro[0]);
+        printf("%f\n",Gyro[1]);
+        printf("%f\n",Gyro[2]);
+        //printf("GyroY= %f\n",Gyro[1]);
+        //printf("GyroZ= %f\n",Gyro[2]);
+        vTaskDelay(100
+         / portTICK_PERIOD_MS);
     }
 }
