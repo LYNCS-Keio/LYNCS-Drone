@@ -7,6 +7,7 @@ namespace mpu9255
     {
     private:
     GYRO_FS m_gyro_fs_sel_;
+ACCEL_FS m_accel_fs_sel_;
 
     public:
     MPU9255(mpu_bus_t* bus);
@@ -19,6 +20,7 @@ namespace mpu9255
      * @return mpu_err_t 
      */
     mpu_err_t setGyroFullScaleSelect(GYRO_FS gyro_fs_sel);
+mpu_err_t setAccelFullScaleSelect(ACCEL_FS accel_fs_sel);
     mpu_err_t measureGyro(float result[3]);
     };
     

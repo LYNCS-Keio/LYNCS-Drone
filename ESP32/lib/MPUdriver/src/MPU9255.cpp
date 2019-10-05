@@ -57,6 +57,9 @@ mpu_err_t MPU9255::initialize(){
     //initialize GYRO_FS_SEL
     ret = setGyroFullScaleSelect(GYRO_FS_SEL_1000DPS);
     if (ret != MPU__SUCCEEDED)return ret;
+
+    ret = setAccelFullScaleSelect(ACCEL_FS_SEL_2G);
+    if (ret != MPU__SUCCEEDED)return ret;
     return MPU__SUCCEEDED;
 }
 
@@ -65,6 +68,14 @@ mpu_err_t MPU9255::setGyroFullScaleSelect(GYRO_FS gyro_fs_sel)
     mpu_err_t ret = writeByteBitfield(registers[GYRO_FS_SEL], gyro_fs_sel);
     if (ret != MPU__SUCCEEDED)return ret;
     m_gyro_fs_sel_ = gyro_fs_sel;
+    return MPU__SUCCEEDED;
+}
+
+mpu_err_t MPU9255::setAccelFullScaleSelect(ACCEL_FS accel_fs_sel)
+{
+    mpu_err_t ret = writeByteBitfield(registers[ACCEL_FS_SEL], accel_fs_sel);
+    if (ret != MPU__SUCCEEDED)return ret;
+    m_accel_fs_sel_ = accel_fs_sel;
     return MPU__SUCCEEDED;
 }
 

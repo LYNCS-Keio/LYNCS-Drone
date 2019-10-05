@@ -3,6 +3,7 @@
 
 namespace mpu
 {
+constexpr float GRAVITY_ACCELERATION = 9.7979;
 // status code
 enum mpu_err_t
 {
@@ -19,6 +20,14 @@ enum ACCEL_FS
     ACCEL_FS_SEL_4G,
     ACCEL_FS_SEL_8G,
     ACCEL_FS_SEL_16G
+};
+
+const float accel_full_scale[] = 
+{
+    2*GRAVITY_ACCELERATION,
+    4*GRAVITY_ACCELERATION,
+    8*GRAVITY_ACCELERATION,
+    16*GRAVITY_ACCELERATION
 };
 
 enum GYRO_FS
@@ -41,6 +50,7 @@ enum Config_Registers_e
 {
     DLPF_CFG = 0,
     GYRO_FS_SEL,
+    ACCEL_FS_SEL,
     FCHOICE_B,      //GYRO_FILTER_SELECTTION
     WHO_AM_I,
     BYPASS_EN,
@@ -54,6 +64,7 @@ enum Config_Registers_e
 const RegMask_t registers[] = {
     {0x1A, 0x07, 0},    //DLPF_CFG
     {0x1B, 0x18, 3},    //GYRO_FS_SEL
+    {0x1C, 0x18, 3},    //ACCEL_FS_SEL
     {0x1B, 0x03, 0},    //FCHOICE_B
     {0x75, 0xFF, 0},    //WHO_AM_I
     {0x37, 0x02, 1},    //BYPASS_EN        
