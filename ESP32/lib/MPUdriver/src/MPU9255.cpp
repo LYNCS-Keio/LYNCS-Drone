@@ -88,9 +88,9 @@ mpu_err_t MPU9255::measureGyro(float result[3])
     g_raw[1] = ((buffer_[2] << 8) | (buffer_[3]));
     g_raw[2] = ((buffer_[4] << 8) | (buffer_[5]));
 
-    result[0] = ((float)(convert_complement<uint16_t, 16>(g_raw[0]))/(1 << 15)) * gyro_full_scale[m_gyro_fs_sel_];
-    result[1] = ((float)(convert_complement<uint16_t, 16>(g_raw[1]))/(1 << 15)) * gyro_full_scale[m_gyro_fs_sel_];
-    result[2] = ((float)(convert_complement<uint16_t, 16>(g_raw[2]))/(1 << 15)) * gyro_full_scale[m_gyro_fs_sel_];
+    result[0] = g_raw[0];
+    result[1] = g_raw[1];
+    result[2] = g_raw[2];
     return MPU__SUCCEEDED;
 }
 

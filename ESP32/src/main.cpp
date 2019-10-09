@@ -9,6 +9,8 @@
 // =========================================================================
 
 #include <cstdio>
+#include <iostream>
+#include <bitset>
 #include <vector>
 #include "SPIbus.hpp"
 #include "DPS.hpp"
@@ -93,18 +95,21 @@ extern "C" void app_main()
         float H;
         dps::dps_err_t ret;
         ret = myDPS.measureHeightOnce(H, 1);
-        printf("H= %f meter ret = %d\n",H, ret);
+        //printf("H= %f meter ret = %d\n",H, ret);
         float Gyro[3];
         myMPU.measureGyro(Gyro);
-        printf("Gyro_x=%f\n",Gyro[0]);
+        /* printf("Gyro_x=%f\n",Gyro[0]);
         printf("Gyro_y=%f\n",Gyro[1]);
-        printf("Gyro_z=%f\n",Gyro[2]);
+        printf("Gyro_z=%f\n",Gyro[2]); */
+        std::cout << std::bitset<16>(Gyro[0]) << ", ";
+        std::cout << std::bitset<16>(Gyro[1]) << ", ";
+        std::cout << std::bitset<16>(Gyro[2]) << "\n";        
 
         float Accel[3];
         myMPU.measureAccel(Accel);
-        printf("Accel_x=%f\n",Accel[0]);
+        /* printf("Accel_x=%f\n",Accel[0]);
         printf("Accel_y=%f\n",Accel[1]);
-        printf("Accel_z=%f\n",Accel[2]);
+        printf("Accel_z=%f\n",Accel[2]); */
         vTaskDelay(100
          / portTICK_PERIOD_MS);
     }
