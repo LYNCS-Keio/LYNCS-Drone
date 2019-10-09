@@ -50,6 +50,10 @@ mpu_err_t MPU9255::initialize(){
     ret = writeByteBitfield(registers[CLKSEL], 0U);
     if (ret != MPU__SUCCEEDED)return ret;
 
+    //initialize EXT_SYNC_SET
+    ret = writeByteBitfield(registers[EXT_SYNC_SET], 0U);
+    if (ret != MPU__SUCCEEDED)return ret;
+
     //initialize INT_PIN_CFG
     ret = writeByteBitfield(registers[BYPASS_EN], 1U);
     if (ret != MPU__SUCCEEDED)return ret;
