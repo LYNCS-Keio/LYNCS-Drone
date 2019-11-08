@@ -258,7 +258,7 @@ U 1 1 5D7F1935
 P 2900 2250
 F 0 "U1" H 2900 2617 50  0000 C CNN
 F 1 "LM2596T-5" H 2900 2526 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:TO-263-5_TabPin3" H 2950 2000 50  0001 L CIN
+F 2 "Package_TO_SOT_THT:TO-220-5_Horizontal_TabDown" H 2950 2000 50  0001 L CIN
 F 3 "http://www.ti.com/lit/ds/symlink/lm2596.pdf" H 2900 2250 50  0001 C CNN
 	1    2900 2250
 	1    0    0    -1  
