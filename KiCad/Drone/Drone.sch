@@ -70,7 +70,7 @@ Text GLabel 5550 2300 0    50   Input ~ 0
 GPIO13
 Text GLabel 5550 2600 0    50   Input ~ 0
 CMD
-Text GLabel 5550 2700 0    50   Input ~ 0
+Text GLabel 5300 2700 0    50   Input ~ 0
 5V
 Text GLabel 7100 900  2    50   Input ~ 0
 GND
@@ -178,8 +178,6 @@ Wire Wire Line
 	5550 2500 5750 2500
 Wire Wire Line
 	5750 2600 5550 2600
-Wire Wire Line
-	5550 2700 5750 2700
 Text Notes 6100 650  2    50   ~ 0
 ESP32-devkitC-V2
 $Comp
@@ -255,103 +253,101 @@ GND
 $Comp
 L Regulator_Switching:LM2596T-5 U1
 U 1 1 5D7F1935
-P 2900 2250
-F 0 "U1" H 2900 2617 50  0000 C CNN
-F 1 "LM2596T-5" H 2900 2526 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-220-5_Horizontal_TabDown" H 2950 2000 50  0001 L CIN
-F 3 "http://www.ti.com/lit/ds/symlink/lm2596.pdf" H 2900 2250 50  0001 C CNN
-	1    2900 2250
+P 2100 2450
+F 0 "U1" H 2100 2817 50  0000 C CNN
+F 1 "LM2596T-5" H 2100 2726 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-220-5_Horizontal_TabDown" H 2150 2200 50  0001 L CIN
+F 3 "http://www.ti.com/lit/ds/symlink/lm2596.pdf" H 2100 2450 50  0001 C CNN
+	1    2100 2450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2400 2350 2250 2350
+	1600 2550 1450 2550
 Wire Wire Line
-	2250 2350 2250 2600
+	1450 2550 1450 2800
 Wire Wire Line
-	2250 2600 2100 2600
-Connection ~ 2250 2600
+	1450 2800 1300 2800
+Connection ~ 1450 2800
 Wire Wire Line
-	2400 2150 2100 2150
-Text GLabel 2000 2150 0    50   Input ~ 0
+	1600 2350 1300 2350
+Text GLabel 1200 2350 0    50   Input ~ 0
 BAT
-Text GLabel 2000 2600 0    50   Input ~ 0
+Text GLabel 1200 2800 0    50   Input ~ 0
 GND
 $Comp
 L Device:C_Small C1
 U 1 1 5D7FFBCB
-P 2100 2350
-F 0 "C1" H 2192 2396 50  0000 L CNN
-F 1 "47u" H 2192 2305 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 2100 2350 50  0001 C CNN
-F 3 "~" H 2100 2350 50  0001 C CNN
-	1    2100 2350
+P 1300 2550
+F 0 "C1" H 1392 2596 50  0000 L CNN
+F 1 "47u" H 1392 2505 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1300 2550 50  0001 C CNN
+F 3 "~" H 1300 2550 50  0001 C CNN
+	1    1300 2550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2100 2450 2100 2600
-Connection ~ 2100 2600
+	1300 2650 1300 2800
+Connection ~ 1300 2800
 Wire Wire Line
-	2100 2600 2000 2600
+	1300 2800 1200 2800
 Wire Wire Line
-	2100 2250 2100 2150
-Connection ~ 2100 2150
+	1300 2450 1300 2350
+Connection ~ 1300 2350
 Wire Wire Line
-	2100 2150 2000 2150
+	1300 2350 1200 2350
 Wire Wire Line
-	3400 2350 3550 2350
+	2600 2550 2750 2550
 $Comp
 L Device:D_Schottky_Small D2
 U 1 1 5D805B17
-P 3550 2500
-F 0 "D2" V 3504 2568 50  0000 L CNN
-F 1 "SS2040FL" V 3595 2568 50  0000 L CNN
-F 2 "Diode_SMD:D_SOD-123F" V 3550 2500 50  0001 C CNN
-F 3 "~" V 3550 2500 50  0001 C CNN
-	1    3550 2500
+P 2750 2700
+F 0 "D2" V 2704 2768 50  0000 L CNN
+F 1 "SS2040FL" V 2795 2768 50  0000 L CNN
+F 2 "Diode_SMD:D_SOD-123F" V 2750 2700 50  0001 C CNN
+F 3 "~" V 2750 2700 50  0001 C CNN
+	1    2750 2700
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	3550 2400 3550 2350
+	2750 2600 2750 2550
 Wire Wire Line
-	3550 2350 3700 2350
-Connection ~ 3550 2350
+	2750 2550 2900 2550
+Connection ~ 2750 2550
 $Comp
 L pspice:INDUCTOR L1
 U 1 1 5D80C70F
-P 3950 2350
-F 0 "L1" H 3950 2565 50  0000 C CNN
-F 1 "989BS-270M" H 3950 2474 50  0000 C CNN
-F 2 "Inductor_SMD:L_12x12mm_H6mm" H 3950 2350 50  0001 C CNN
-F 3 "~" H 3950 2350 50  0001 C CNN
-	1    3950 2350
+P 3150 2550
+F 0 "L1" H 3150 2765 50  0000 C CNN
+F 1 "989BS-270M" H 3150 2674 50  0000 C CNN
+F 2 "Inductor_SMD:L_12x12mm_H6mm" H 3150 2550 50  0001 C CNN
+F 3 "~" H 3150 2550 50  0001 C CNN
+	1    3150 2550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4200 2350 4350 2350
+	3400 2550 3550 2550
 $Comp
 L Device:C_Small C2
 U 1 1 5D80F134
-P 4350 2500
-F 0 "C2" H 4442 2546 50  0000 L CNN
-F 1 "22u" H 4442 2455 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 4350 2500 50  0001 C CNN
-F 3 "~" H 4350 2500 50  0001 C CNN
-	1    4350 2500
+P 3550 2700
+F 0 "C2" H 3642 2746 50  0000 L CNN
+F 1 "22u" H 3642 2655 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3550 2700 50  0001 C CNN
+F 3 "~" H 3550 2700 50  0001 C CNN
+	1    3550 2700
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4350 2400 4350 2350
-Connection ~ 4350 2350
+	3550 2600 3550 2550
+Connection ~ 3550 2550
 Wire Wire Line
-	4350 2350 4550 2350
+	2750 2800 3550 2800
+Connection ~ 2750 2800
 Wire Wire Line
-	3550 2600 4350 2600
-Connection ~ 3550 2600
+	3550 2550 3550 2350
 Wire Wire Line
-	4350 2350 4350 2150
-Wire Wire Line
-	4350 2150 3400 2150
-Text GLabel 4550 2350 2    50   Input ~ 0
+	3550 2350 2600 2350
+Text GLabel 4700 2550 2    50   Input ~ 0
 5V
 Text GLabel 8950 2250 2    50   Input ~ 0
 MPU_VCC
@@ -359,7 +355,7 @@ Text GLabel 8650 2250 0    50   Input ~ 0
 3V3
 Wire Wire Line
 	8650 2250 8950 2250
-Text Notes 2300 1850 2    50   ~ 0
+Text Notes 1500 2050 2    50   ~ 0
 11Vto5VReg
 Text Notes 5850 4450 2    50   ~ 0
 Raspberry Pi 3
@@ -436,7 +432,7 @@ Text GLabel 8650 2550 0    50   Input ~ 0
 GPIO19
 Wire Wire Line
 	8650 2400 8950 2400
-Text GLabel 3750 3650 0    50   Input ~ 0
+Text GLabel 1050 5950 0    50   Input ~ 0
 GPIO21
 Text GLabel 8950 2700 2    50   Input ~ 0
 SCL
@@ -639,38 +635,38 @@ Text GLabel 7100 2500 2    50   Input ~ 0
 SD1
 Text GLabel 7100 2600 2    50   Input ~ 0
 SD0
-Text GLabel 2300 3550 2    50   Input ~ 0
+Text GLabel 1850 4050 2    50   Input ~ 0
 PWM1
-Text GLabel 2300 3650 2    50   Input ~ 0
+Text GLabel 1850 4150 2    50   Input ~ 0
 PWM2
-Text GLabel 2300 3750 2    50   Input ~ 0
+Text GLabel 1850 4250 2    50   Input ~ 0
 PWM3
-Text GLabel 2300 3850 2    50   Input ~ 0
+Text GLabel 1850 4350 2    50   Input ~ 0
 PWM4
 $Comp
 L Connector:Conn_01x06_Female J1
 U 1 1 5D8394B4
-P 1700 3550
-F 0 "J1" H 1592 3935 50  0000 C CNN
-F 1 "ESC" H 1592 3844 50  0000 C CNN
-F 2 "Connector_JST:JST_SH_BM06B-SRSS-TB_1x06-1MP_P1.00mm_Vertical" H 1700 3550 50  0001 C CNN
-F 3 "~" H 1700 3550 50  0001 C CNN
-	1    1700 3550
+P 1250 4050
+F 0 "J1" H 1142 4435 50  0000 C CNN
+F 1 "ESC" H 1142 4344 50  0000 C CNN
+F 2 "Connector_JST:JST_SH_BM06B-SRSS-TB_1x06-1MP_P1.00mm_Vertical" H 1250 4050 50  0001 C CNN
+F 3 "~" H 1250 4050 50  0001 C CNN
+	1    1250 4050
 	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	2300 3550 1900 3550
+	1850 4050 1450 4050
 Wire Wire Line
-	1900 3650 2300 3650
+	1450 4150 1850 4150
 Wire Wire Line
-	2300 3750 1900 3750
+	1850 4250 1450 4250
 Wire Wire Line
-	1900 3850 2300 3850
-Text Notes 1700 3100 0    50   ~ 0
+	1450 4350 1850 4350
+Text Notes 1250 3600 0    50   ~ 0
 ESC
-Text GLabel 3750 3500 0    50   Input ~ 0
+Text GLabel 2800 6500 0    50   Input ~ 0
 ESC_VIN
-Text GLabel 3950 3500 2    50   Input ~ 0
+Text GLabel 3000 6500 2    50   Input ~ 0
 BAT
 $Comp
 L Connector:Conn_01x04_Female J6
@@ -697,23 +693,23 @@ $EndComp
 $Comp
 L Connector:Conn_01x04_Female U2
 U 1 1 5D708C9C
-P 4200 3750
-F 0 "U2" H 3900 3950 50  0000 L CNN
-F 1 "SKI03021" H 3800 3450 50  0000 L CNN
-F 2 "Package_TO_SOT_SMD:TO-263-3_TabPin4" H 4200 3750 50  0001 C CNN
-F 3 "~" H 4200 3750 50  0001 C CNN
-	1    4200 3750
+P 2700 6050
+F 0 "U2" H 2400 6250 50  0000 L CNN
+F 1 "SKI03021" H 2550 6250 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:TO-263-3_TabPin4" H 2700 6050 50  0001 C CNN
+F 3 "~" H 2700 6050 50  0001 C CNN
+	1    2700 6050
 	1    0    0    -1  
 $EndComp
-Text Notes 3100 3400 0    50   ~ 0
+Text Notes 1200 5450 0    50   ~ 0
 SKI03021 PowerMOSFET
 Wire Wire Line
-	2250 2600 2900 2600
+	1450 2800 2100 2800
 Wire Wire Line
-	2900 2550 2900 2600
-Connection ~ 2900 2600
+	2100 2750 2100 2800
+Connection ~ 2100 2800
 Wire Wire Line
-	2900 2600 3550 2600
+	2100 2800 2750 2800
 $Comp
 L power:PWR_FLAG #FLG0101
 U 1 1 5D79ADAC
@@ -774,23 +770,23 @@ Wire Wire Line
 $Comp
 L Connector:Conn_01x02_Female J10
 U 1 1 5D71E71C
-P 3500 4550
-F 0 "J10" H 3392 4225 50  0000 C CNN
-F 1 "to ESC Power" H 3392 4316 50  0000 C CNN
-F 2 "RC-Battery-Connectors:XT-60_female" H 3500 4550 50  0001 C CNN
-F 3 "~" H 3500 4550 50  0001 C CNN
-	1    3500 4550
+P 1600 4950
+F 0 "J10" H 1492 4625 50  0000 C CNN
+F 1 "to ESC Power" H 1492 4716 50  0000 C CNN
+F 2 "RC-Battery-Connectors:XT-60_female" H 1600 4950 50  0001 C CNN
+F 3 "~" H 1600 4950 50  0001 C CNN
+	1    1600 4950
 	-1   0    0    1   
 $EndComp
-Text GLabel 3900 4450 2    50   Input ~ 0
+Text GLabel 2000 4850 2    50   Input ~ 0
 ESC_VIN
-Text GLabel 3900 4550 2    50   Input ~ 0
+Text GLabel 2000 4950 2    50   Input ~ 0
 ESC_GND
 Wire Wire Line
-	3900 4550 3700 4550
+	2000 4950 1800 4950
 Wire Wire Line
-	3700 4450 3900 4450
-Text Notes 3150 4150 0    50   ~ 0
+	1800 4850 2000 4850
+Text Notes 1250 4550 0    50   ~ 0
 to ESC XT60 connector
 Text Notes 9150 3650 2    50   ~ 0
 SPI master:ESP32 slave:DPS310\nusing vspi
@@ -858,50 +854,160 @@ Text GLabel 8650 2400 0    50   Input ~ 0
 GPIO23
 Text GLabel 8650 4200 0    50   Input ~ 0
 GPIO19
-Text Notes 3800 2800 0    50   ~ 0
+Text Notes 800  900  0    50   ~ 0
 Anothor 5V power source
-Text GLabel 4600 3100 2    50   Input ~ 0
+Text GLabel 1600 1200 2    50   Input ~ 0
 5V
 Wire Wire Line
-	4600 3100 4350 3100
+	1600 1200 1350 1200
 $Comp
 L Connector:Conn_01x02_Female J11
 U 1 1 5D86C630
-P 4150 3200
-F 0 "J11" H 4042 2875 50  0000 C CNN
-F 1 "Conn_01x02_Female" H 4042 2966 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 4150 3200 50  0001 C CNN
-F 3 "~" H 4150 3200 50  0001 C CNN
-	1    4150 3200
+P 1150 1300
+F 0 "J11" H 1042 975 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 1042 1066 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 1150 1300 50  0001 C CNN
+F 3 "~" H 1150 1300 50  0001 C CNN
+	1    1150 1300
 	-1   0    0    1   
 $EndComp
-Text GLabel 4600 3200 2    50   Input ~ 0
+Text GLabel 1600 1300 2    50   Input ~ 0
 GND
 Wire Wire Line
-	4600 3200 4350 3200
-Text Notes 4300 3700 0    50   ~ 0
+	1600 1300 1350 1300
+Text Notes 2800 6000 0    50   ~ 0
 GATE
-Text Notes 4300 3800 0    50   ~ 0
+Text Notes 2800 6100 0    50   ~ 0
 DRAIN
-Text Notes 4300 3900 0    50   ~ 0
+Text Notes 2800 6200 0    50   ~ 0
 SOURCE
 Wire Wire Line
-	4000 3950 3850 3950
+	2500 6250 2350 6250
 Wire Wire Line
-	3750 3650 4000 3650
+	2250 6150 2500 6150
 Wire Wire Line
-	3750 3850 4000 3850
+	2500 6050 2350 6050
 Wire Wire Line
-	3850 3750 3750 3750
+	2350 6250 2350 6050
 Wire Wire Line
-	4000 3750 3850 3750
-Connection ~ 3850 3750
-Wire Wire Line
-	3850 3950 3850 3750
-Wire Wire Line
-	3950 3500 3750 3500
-Text GLabel 3750 3850 0    50   Input ~ 0
+	3000 6500 2800 6500
+Text GLabel 2250 6350 3    50   Input ~ 0
 ESC_GND
-Text GLabel 3750 3750 0    50   Input ~ 0
+$Comp
+L Device:R_Small R?
+U 1 1 5DCE3F7E
+P 1950 6150
+F 0 "R?" H 2009 6196 50  0000 L CNN
+F 1 "10k" H 2009 6105 50  0000 L CNN
+F 2 "" H 1950 6150 50  0001 C CNN
+F 3 "~" H 1950 6150 50  0001 C CNN
+	1    1950 6150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2250 6150 2250 6350
+$Comp
+L Device:D_Schottky_Small D?
+U 1 1 5DD5F165
+P 1700 6150
+F 0 "D?" V 1654 6218 50  0000 L CNN
+F 1 "SS2040FL" H 1600 6050 50  0000 L CNN
+F 2 "" V 1700 6150 50  0001 C CNN
+F 3 "~" V 1700 6150 50  0001 C CNN
+	1    1700 6150
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:D_Schottky_Small D?
+U 1 1 5DD79C14
+P 1700 5750
+F 0 "D?" V 1654 5818 50  0000 L CNN
+F 1 "SS2040FL" H 1500 5650 50  0000 L CNN
+F 2 "" V 1700 5750 50  0001 C CNN
+F 3 "~" V 1700 5750 50  0001 C CNN
+	1    1700 5750
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1700 5850 1700 5950
+Connection ~ 1700 5950
+Wire Wire Line
+	1700 6050 1700 5950
+Text GLabel 1800 5600 2    50   Input ~ 0
+5V
+Wire Wire Line
+	1800 5600 1700 5600
+Wire Wire Line
+	1700 5600 1700 5650
+Wire Wire Line
+	1700 6250 1700 6350
+Wire Wire Line
+	1950 6350 1950 6450
+Wire Wire Line
+	1700 6350 1950 6350
+Text GLabel 1950 6450 3    50   Input ~ 0
 GND
+Text GLabel 2300 6050 0    50   Input ~ 0
+GND
+Wire Wire Line
+	2300 6050 2350 6050
+Connection ~ 2350 6050
+Wire Wire Line
+	1950 6250 1950 6350
+Wire Wire Line
+	1700 5950 1950 5950
+Connection ~ 1950 6350
+Wire Wire Line
+	1950 6050 1950 5950
+Connection ~ 1950 5950
+Wire Wire Line
+	1950 5950 2500 5950
+Connection ~ 3550 2800
+Text GLabel 4700 2800 2    50   Input ~ 0
+GND
+$Comp
+L Device:D_Schottky_Small D?
+U 1 1 5DE86A56
+P 3900 2550
+F 0 "D?" V 3854 2618 50  0000 L CNN
+F 1 "SS2040FL" V 3945 2618 50  0000 L CNN
+F 2 "Diode_SMD:D_SOD-123F" V 3900 2550 50  0001 C CNN
+F 3 "~" V 3900 2550 50  0001 C CNN
+	1    3900 2550
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3550 2800 4000 2800
+$Comp
+L Device:D_Schottky_Small D?
+U 1 1 5DEA8391
+P 5500 2700
+F 0 "D?" V 5454 2768 50  0000 L CNN
+F 1 "SS2040FL" V 5545 2768 50  0000 L CNN
+F 2 "Diode_SMD:D_SOD-123F" V 5500 2700 50  0001 C CNN
+F 3 "~" V 5500 2700 50  0001 C CNN
+	1    5500 2700
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5400 2700 5300 2700
+Wire Wire Line
+	5600 2700 5750 2700
+$Comp
+L Device:R_Small R?
+U 1 1 5DD274C6
+P 1300 5950
+F 0 "R?" V 1104 5950 50  0000 C CNN
+F 1 "1k" V 1195 5950 50  0000 C CNN
+F 2 "" H 1300 5950 50  0001 C CNN
+F 3 "~" H 1300 5950 50  0001 C CNN
+	1    1300 5950
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1200 5950 1050 5950
+Wire Wire Line
+	1400 5950 1700 5950
+Wire Wire Line
+	3800 2550 3550 2550
 $EndSCHEMATC
