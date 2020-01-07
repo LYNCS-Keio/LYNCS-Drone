@@ -2902,7 +2902,7 @@
   (gr_text "to ESC" (at 177.8 96.52 90) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
-  (gr_text "DRONE_PROJECT\nCIRCUIT_BOARD_V2" (at 171.45 87.63) (layer F.SilkS)
+  (gr_text "DRONE_PROJECT\nCIRCUIT_BOARD_V3\n" (at 171.45 87.63) (layer F.SilkS)
     (effects (font (size 1 0.8) (thickness 0.12) italic))
   )
   (gr_text "Extra Power \nDelivery" (at 142.24 113.03) (layer F.SilkS) (tstamp 5DE0032C)

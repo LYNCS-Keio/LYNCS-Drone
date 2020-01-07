@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name Drone-rescue)(type Legacy)(uri ${KIPRJMOD}/Drone-rescue.lib)(options "")(descr ""))
+)
